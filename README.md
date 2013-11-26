@@ -197,3 +197,6 @@ In your view you can use the `embed` method and pass it the path to the file. Th
 ```
 
 > The $message variable is always passed to e-mail views by the Mailgun class.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Bogardo/mailgun/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
