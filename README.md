@@ -17,8 +17,7 @@ Like so:
 	    "bogardo/mailgun": "0.1"
 	}
 
-Run composer update from the command line
-
+Run composer update from the command line to install the package
 ```bash
 composer update
 ```
@@ -168,7 +167,6 @@ Mailgun::send('emails.welcome', $data, function($message)
 	$message->subject('Email subject');
 });
 ```
-
 
 > The to, cc, bcc, sender, from and subject methods are all chainable:
 > ```php
