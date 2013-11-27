@@ -1,7 +1,8 @@
 Bogardo/Mailgun
 =======
 
-A Mailgun package for Laravel 4 for sending emails using the Mailgun HTTP API. 
+A Mailgun package for Laravel 4 for sending emails using the Mailgun HTTP API.
+It's main advantage is that the syntax is the same as the Laravel Mail component and I also tried to give it very simmilar functionality. So if you've used that component before, using the Mailgun package should be a breeze.
 
 This package uses the [Mailgun-PHP](https://github.com/mailgun/mailgun-php) library version 1.4.<br />
 
