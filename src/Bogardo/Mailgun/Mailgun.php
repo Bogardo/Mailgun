@@ -1,13 +1,9 @@
 <?php namespace Bogardo\Mailgun;
 
-
 use Closure;
 use Mailgun\Mailgun as Mg;
-use Illuminate\Log\Writer;
 use Illuminate\View\Environment;
-use Illuminate\Queue\QueueManager;
 use Illuminate\Container\Container;
-use Illuminate\Support\SerializableClosure;
 use Illuminate\Support\Facades\Config;
 
 class Mailgun {
@@ -64,7 +60,7 @@ class Mailgun {
 	{
 		$this->views = $views;
 
-		$this->from = Config::get('mail.from');
+		$this->from = Config::get('mailgun::from');
 		$this->mailgun = new Mg(Config::get('mailgun::api_key'));
 	}
 
