@@ -34,7 +34,7 @@ class MailgunServiceProvider extends ServiceProvider {
 
 		$this->app->booting(function(){
 			$loader = \Illuminate\Foundation\AliasLoader::getInstance();
-			$loader->alias('Mail', 'Bogardo\Mailgun\Facades\Mailgun');
+			$loader->alias('Mailgun', 'Bogardo\Mailgun\Facades\Mailgun');
 		});
 	}
 
