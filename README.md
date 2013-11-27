@@ -11,13 +11,13 @@ This package uses the [Mailgun-PHP](https://github.com/mailgun/mailgun-php) libr
 ## Installation ##
 Open your `composer.json` file and add the following to the `require` key:
 
-    "bogardo/mailgun": "0.1"
+    "bogardo/mailgun": "dev-master"
 
 Like so:
 
     "require": {
     	"laravel/framework": "4.0.*",
-	    "bogardo/mailgun": "0.1"
+	    "bogardo/mailgun": "dev-master"
 	}
 
 Run composer update from the command line to install the package
