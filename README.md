@@ -5,6 +5,8 @@ A Mailgun package for Laravel 4 for sending emails using the Mailgun HTTP API.
 
 This package uses the [Mailgun-PHP](https://github.com/mailgun/mailgun-php) library version 1.4.<br />
 
+> This package is available on Packagist: [https://packagist.org/packages/bogardo/mailgun](https://packagist.org/packages/bogardo/mailgun)
+
 ## Installation ##
 Open your `composer.json` file and add the following to the `require` key:
 
@@ -197,3 +199,6 @@ In your view you can use the `embed` method and pass it the path to the file. Th
 ```
 
 > The $message variable is always passed to e-mail views by the Mailgun class.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Bogardo/mailgun/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
