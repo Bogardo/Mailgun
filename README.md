@@ -5,6 +5,8 @@ A Mailgun package for Laravel 4 for sending emails using the Mailgun HTTP API.
 
 This package uses the [Mailgun-PHP](https://github.com/mailgun/mailgun-php) library version 1.4.<br />
 
+> This package is available on Packagist: [https://packagist.org/packages/bogardo/mailgun](https://packagist.org/packages/bogardo/mailgun)
+
 ## Installation ##
 Open your `composer.json` file and add the following to the `require` key:
 
