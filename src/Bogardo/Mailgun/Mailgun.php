@@ -61,7 +61,10 @@ class Mailgun {
 		$this->views = $views;
 
 		$this->from = Config::get('mailgun::from');
+
 		$this->mailgun = new Mg(Config::get('mailgun::api_key'));
+
+		$this->message = new Mailgun\Message();
 	}
 
 	/**
@@ -79,7 +82,7 @@ class Mailgun {
 	}
 
 	/**
-	 * Send a new message using a view.
+	 * Send a new message
 	 *
 	 * @param  string|array  $view
 	 * @param  array  $data
@@ -88,14 +91,17 @@ class Mailgun {
 	 */
 	public function send($view, array $data, $callback)
 	{
-		$this->message = new Mailgun\Message();
-
 		$this->callMessageBuilder($callback, $this->message);
 
 		$this->getMessage($view, $data);
-		
-		$result = $this->mailgun->sendMessage(Config::get('mailgun::domain'), $this->getMessageData(), $this->getAttachmentData());
-		return $result;
+
+		return $this->mailgun->sendMessage(Config::get('mailgun::domain'), $this->getMessageData(), $this->getAttachmentData());
+	}
+
+	public function later($time, $view, array $data, $callback)
+	{
+		$this->message->setDeliveryTime($time);
+		return $this->send($view, $data, $callback);
 	}
 
 	/**

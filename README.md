@@ -13,7 +13,7 @@ Open your `composer.json` file and add the following to the `require` key:
 
     "bogardo/mailgun": "dev-master"
 
-Like so:
+Example:
 
     "require": {
     	"laravel/framework": "4.0.*",
@@ -200,6 +200,63 @@ In your view you can use the `embed` method and pass it the path to the file. Th
 ```
 
 > The $message variable is always passed to e-mail views by the Mailgun class.
+
+### Scheduling ###
+Mailgun provides the ability to set a delivery time for emails **up to 3 days in the future**.
+To do this you can make use of the `later` method.
+While messages are not guaranteed to arrive at exactly at the requested time due to the dynamic nature of the queue, Mailgun will do it's best.
+
+The `later` method works the same as the (default) `send` method but it accepts 1 extra argument.
+The extra argument is the amount of seconds (minutes, hours or days) from now the message should be send.
+> **If the specified time exceeds the 3 day limit it will set the delivery time to the maximum of 3 days.**
+
+To send an email in 10 seconds from now you can do the following: 
+```php
+Mailgun::later(10, 'emails.welcome', $data, function($message)
+{
+    $message->to('foo@example.com', 'John Smith')->subject('Welcome!');
+});
+```
+
+When passing a string or integer as the first argument, it will interpret it as `seconds`. You can also specify the time in `minutes`, `hours` or `days` by passing an array where the key is the type and the value is the amount.
+For example, sending in 5 hours from now:
+```php
+Mailgun::later(array('hours' => 5), 'emails.welcome', $data, function($message)
+{
+    $message->to('foo@example.com', 'John Smith')->subject('Welcome!');
+});
+```
+
+> When scheduling messages, make sure you've set the correct timezone in your `app/config/app.php` file.
+> 
+
+### Tagging ###
+Sometimes it’s helpful to categorize your outgoing email traffic based on some criteria, perhaps separate signup emails from password recovery emails or from user comments. Mailgun lets you tag each outgoing message with a custom value. When you access stats on you messages within the Mailgun control panel, they will be aggregated by these tags.
+
+> **Warning:** A single message may be marked with up to 3 tags. Maximum tag name length is 128 characters.
+> Mailgun allows you to have only limited amount of tags. You can have a total of 4000 unique tags.
+
+To add a Tag to your email you can use the `tag` method.
+
+You can add a single tag to an email by providing a `string`. 
+
+```php
+Mailgun::send('emails.welcome', $data, function($message)
+{
+	$message->tag('myTag');
+});
+```
+
+To add multiple tags to an email you can pass an `array` of tags. (Max 3)
+
+```php
+Mailgun::send('emails.welcome', $data, function($message)
+{
+	$message->tag(array('Tag1', 'Tag2', 'Tag3'));
+});
+```
+
+>If you pass more than 3 tags to the `tag` method it will only use the first 3, the others will be ignored.
 
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Bogardo/mailgun/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
