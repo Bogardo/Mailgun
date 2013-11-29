@@ -8,6 +8,21 @@ This package uses the [Mailgun-PHP](https://github.com/mailgun/mailgun-php) libr
 
 > This package is available on Packagist: [https://packagist.org/packages/bogardo/mailgun](https://packagist.org/packages/bogardo/mailgun)
 
+## Table of contents ##
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+	- [Views](#views)
+	- [Data](#data)
+	- [Mail options](#mail-options)
+		- [Recipients](#recipients)
+		- [Sender](#sender)
+		- [Subject](#subject)
+	- [Attachments](#attachments)
+	- [Embedding Inline Images](#embedding-inline-images)
+	- [Scheduling](#scheduling)
+	- [Tagging](#tagging)
+
 ## Installation ##
 Open your `composer.json` file and add the following to the `require` key:
 
