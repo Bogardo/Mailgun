@@ -24,18 +24,41 @@ This package uses the [Mailgun-PHP](https://github.com/mailgun/mailgun-php) libr
 	- [Tagging](#tagging)
 
 ## Installation ##
+
+### Laravel 4 ###
 Open your `composer.json` file and add the following to the `require` key:
 
-    "bogardo/mailgun": "dev-master"
+    "bogardo/mailgun": "v1.0"
 
 Example:
 
     "require": {
     	"laravel/framework": "4.0.*",
-	    "bogardo/mailgun": "dev-master"
+	    "bogardo/mailgun": "v1.0"
 	}
 
-Run composer update from the command line to install the package
+### Laravel 4.1 ###
+Open your `composer.json` file and add the following to the `require` key:
+
+    "bogardo/mailgun": "v2.0"
+
+Example:
+
+    "require": {
+    	"laravel/framework": "4.0.*",
+	    "bogardo/mailgun": "v2.0"
+	}
+
+### Dev master ###
+If you want the latest and greatest, please add the following to the `require` key:
+
+	"bogardo/mailgun": "dev-master"
+
+>Bear in mind that the `dev-master` does not support Laravel 4.0, only 4.1 (and up) 
+
+---
+<br />
+After adding the key, run composer update from the command line to install the package
 ```bash
 composer update
 ```
