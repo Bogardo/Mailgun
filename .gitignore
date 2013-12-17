@@ -3,3 +3,4 @@ composer.phar
 composer.lock
 .DS_Store
 /src/views
+/src/config/config.dev.php
