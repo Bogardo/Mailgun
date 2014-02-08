@@ -227,7 +227,7 @@ Embedding inline images into your e-mails is very easy.
 In your view you can use the `embed` method and pass it the path to the file. This will return a CID (Content-ID) which will be used as the `source` for the image. You can add multiple inline images to your message. 
 > **Since mailgun-php 1.6, the ability to rename attachments has been added due to the upgrade to guzzle 1.8**
 
-It accepts 2 arguments:
+The `embed` method accepts 2 arguments:
 * $path | The path to the image
 * $name (optional) | The _remote_ name of the file (attachment is renamed server side)
 ```html
@@ -253,7 +253,7 @@ Mailgun::send('emails.welcome', $data, function($message)
 ```html
 <body>
     <img src="{{ $message->embed($img) }}">
-	<img src="{{ $message->embed($otherImg) }}">
+    <img src="{{ $message->embed($otherImg, 'custom_name.jpg') }}">
 </body>
 ```
 
@@ -261,7 +261,7 @@ Mailgun::send('emails.welcome', $data, function($message)
 ```html
 <body>
     <img src="cid:example.png">
-	<img src="cid:foobar.jpg">
+    <img src="cid:custom_name.jpg">
 </body>
 ```
 
