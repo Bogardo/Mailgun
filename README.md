@@ -4,7 +4,7 @@ Bogardo/Mailgun
 A Mailgun package for Laravel 4 for sending emails using the Mailgun HTTP API.
 It's main advantage is that the syntax is the same as the Laravel Mail component and I also tried to give it very simmilar functionality. So if you've used that component before, using the Mailgun package should be a breeze.
 
-This package uses the [Mailgun-PHP](https://github.com/mailgun/mailgun-php) library version 1.5 behind the scenes.<br />
+This package uses the [Mailgun-PHP](https://github.com/mailgun/mailgun-php) library version 1.7 behind the scenes.<br />
 
 > This package is available on Packagist: [https://packagist.org/packages/bogardo/mailgun](https://packagist.org/packages/bogardo/mailgun)
 
@@ -18,6 +18,7 @@ This package uses the [Mailgun-PHP](https://github.com/mailgun/mailgun-php) libr
 		- [Recipients](#recipients)
 		- [Sender](#sender)
 		- [Subject](#subject)
+		- [Reply-to](#reply-to)
 	- [Attachments](#attachments)
 	- [Embedding Inline Images](#embedding-inline-images)
 	- [Scheduling](#scheduling)
@@ -44,7 +45,7 @@ Add the service provider to the `providers` array in your `app/config/app.php` f
 
 ## Configuration ##
 Before you can start using the package we need to set some configurations.
-To do so you must first publish to config file, you can do this with the following `artisan` command. 
+To do so you must first publish the config file, you can do this with the following `artisan` command. 
 
 ```bash
 php artisan config:publish bogardo/mailgun
@@ -67,7 +68,8 @@ Mailgun::send('emails.welcome', $data, function($message)
 
 ### Views ###
 
-The first argument passed to the `send` method is the name of the view that should be used as the e-mail body. Mailgun supports 2 types of bodies: `text` and `html`.
+The first argument passed to the `send` method is the name of the view that should be used as the e-mail body.
+Mailgun supports 2 types of bodies: `text` and `html`.
 You can specify the type of body like so:
 
 ```php
@@ -94,11 +96,11 @@ Mailgun::send(array('text' => 'text.view'), $data, $callback);
  
 ### Data ###
 
-The second argument passed to the `send` method is the `$data` `array` that is be passed to the view.
+The second argument passed to the `send` method is the `$data` `array` that is passed to the view.
 
 > Note: A `$message` variable is always passed to e-mail views, and allows the inline embedding of attachments. So, it is best to avoid passing a (custom) `message` variable in your view payload.
 
-You can access the values from the `$data` array in your view using the `$message` variable and specifying the array key.
+You can access the values from the `$data` array as variables using the array key.
 
 Example:
 
@@ -118,8 +120,8 @@ View `emails.welcome`:
 
 ```html
 <body>
-    Hi {{ $message->customer }},
-	Please visit {{ $message->url }}
+    Hi {{ $customer }},
+	Please visit {{ $url }}
 </body>
 ```
 
@@ -165,7 +167,7 @@ Mailgun::send('emails.welcome', $data, function($message)
 ```
 
 ##### Sender #####
-In the Mailgun config file you have specified the `from` data. If you would like, you can override this using the `from` method it accepts two arguments: `email` and `name` where the `name` field is optional.
+In the Mailgun config file you have specified the `from` address. If you would like, you can override this using the `from` method. It accepts two arguments: `email` and `name` where the `name` field is optional.
 
 ```php
 #with name
@@ -184,16 +186,24 @@ Mailgun::send('emails.welcome', $data, function($message)
 });
 ```
 
-> The to, cc, bcc, sender, from and subject methods are all chainable:
-> ```php
-> $message
-> 	->to('foo@example.com', 'Recipient Name')
-> 	->cc('bar@example.com', 'Recipient Name')
-> 	->subject('Email subject');
-> ```
+##### Reply-to #####
+Setting a reply-to address
+```php
+Mailgun::send('emails.welcome', $data, function($message)
+{
+	$message->replyTo('reply@example.com', 'Helpdesk');
+});
+```
+>If the reply_to config setting is set, the reply-to will be automatically set for all messages
+>You can overwrite this value by adding it to the message as displayed in the example.
 
 ### Attachments ###
-To send an attachment with the email you can use the `attach` method. It accepts 1 argument; The file path.
+To add an attachment to the email you can use the `attach` method. You can add multiple attachments.
+> **Since mailgun-php 1.6, the ability to rename attachments has been added due to the upgrade to guzzle 1.8**
+
+It accepts 2 arguments:
+* $path | The path to the image
+* $name (optional) | The _remote_ name of the file (attachment is renamed server side)
 
 ```php
 Mailgun::send('emails.welcome', $data, function($message)
@@ -201,14 +211,57 @@ Mailgun::send('emails.welcome', $data, function($message)
     $message->attach($pathToFile);
 });
 ```
+<br />
+> The to, cc, bcc, sender, from, subject etc... methods are all chainable:
+> ```php
+> $message
+> 	->to('foo@example.com', 'Recipient Name')
+> 	->cc('bar@example.com', 'Recipient Name')
+> 	->subject('Email subject');
+> ```
+
+<br />
 
 ### Embedding Inline Images ###
 Embedding inline images into your e-mails is very easy.
-In your view you can use the `embed` method and pass it the path to the file. This will return a CID (Content-ID) which you can use as the `source` for the image.
+In your view you can use the `embed` method and pass it the path to the file. This will return a CID (Content-ID) which will be used as the `source` for the image. You can add multiple inline images to your message. 
+> **Since mailgun-php 1.6, the ability to rename attachments has been added due to the upgrade to guzzle 1.8**
 
+It accepts 2 arguments:
+* $path | The path to the image
+* $name (optional) | The _remote_ name of the file (attachment is renamed server side)
 ```html
 <body>
     <img src="{{ $message->embed($pathToFile) }}">
+</body>
+```
+#### Example ####
+
+###### Input ######
+```php
+$data = array(
+	'img' => 'assets/img/example.png',
+	'otherImg' => 'assets/img/foobar.jpg'
+);
+
+Mailgun::send('emails.welcome', $data, function($message)
+{
+	$message->to('foo@example.com', 'Recipient Name');
+});
+```
+
+```html
+<body>
+    <img src="{{ $message->embed($img) }}">
+	<img src="{{ $message->embed($otherImg) }}">
+</body>
+```
+
+###### Output ######
+```html
+<body>
+    <img src="cid:example.png">
+	<img src="cid:foobar.jpg">
 </body>
 ```
 
@@ -244,7 +297,7 @@ Mailgun::later(array('hours' => 5), 'emails.welcome', $data, function($message)
 > 
 
 ### Tagging ###
-Sometimes it’s helpful to categorize your outgoing email traffic based on some criteria, perhaps separate signup emails from password recovery emails or from user comments. Mailgun lets you tag each outgoing message with a custom value. When you access stats on you messages within the Mailgun control panel, they will be aggregated by these tags.
+Sometimes it’s helpful to categorize your outgoing email traffic based on some criteria, perhaps for separate signup emails, password recovery emails or for user comments. Mailgun lets you tag each outgoing message with a custom tag. When you access the _Tracking_ page  within the Mailgun control panel, they will be aggregated by these tags.
 
 > **Warning:** A single message may be marked with up to 3 tags. Maximum tag name length is 128 characters.
 > Mailgun allows you to have only limited amount of tags. You can have a total of 4000 unique tags.

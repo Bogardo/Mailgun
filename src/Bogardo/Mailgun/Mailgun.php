@@ -25,21 +25,21 @@ class Mailgun {
 	/**
 	 * Mailgun Object
 	 *
-	 * @var \Admin\Mail\Mailgun
+	 * @var \Bogardo\Mailgun\Mailgun
 	 */
 	protected $mailgun;
 
 	/**
 	 * Mailgun message Object
 	 *
-	 * @var \Admin\Mail\Mailgun\Message
+	 * @var \Bogardo\Mailgun\Mailgun\Message
 	 */
 	protected $message;
 
 	/**
 	 * Mailgun attachment Object
 	 *
-	 * @var \Admin\Mail\Mailgun\Attachment
+	 * @var array
 	 */
 	protected $attachment;	
 
@@ -87,7 +87,7 @@ class Mailgun {
 	 * @param  string|array  $view
 	 * @param  array  $data
 	 * @param  Closure|string  $callback
-	 * @return int
+	 * @return object Mailgun response containing http_response_body and http_response_code
 	 */
 	public function send($view, array $data, $callback)
 	{
@@ -98,6 +98,15 @@ class Mailgun {
 		return $this->mailgun->sendMessage(Config::get('mailgun::domain'), $this->getMessageData(), $this->getAttachmentData());
 	}
 
+	/**
+	 * Queue a new e-mail message for sending after (n) seconds/minutes/hours/days.
+	 *
+	 * @param  int|string|array  $delay
+	 * @param  string|array  $view
+	 * @param  array  $data
+	 * @param  Closure|string  $callback
+	 * @return object Mailgun response containing http_response_body and http_response_code
+	 */
 	public function later($time, $view, array $data, $callback)
 	{
 		$this->message->setDeliveryTime($time);
@@ -106,6 +115,8 @@ class Mailgun {
 
 	/**
 	 * Get HTML and/or Text message
+	 * @param  string $view
+	 * @param  array $data
 	 */
 	protected function getMessage($view, $data)
 	{
@@ -129,18 +140,32 @@ class Mailgun {
 		}
 	}
 
+	/**
+	 * Get rendered HTML body
+	 * @param  string $view
+	 * @param  array $data
+	 */
 	protected function getHtmlMessage($view, $data)
 	{
 		$renderedView = $this->getView($view, $data);
 		$this->message->html($renderedView);
 	}
 
+	/**
+	 * Get rendered text body
+	 * @param  string $view
+	 * @param  array $data
+	 */
 	protected function getTextMessage($view, $data)
 	{
 		$renderedView = $this->getView($view, $data);
 		$this->message->text($renderedView);
 	}
 
+	/**
+	 * Get message data
+	 * @return array \Bogardo\Mailgun\Mailgun\Message object casted to array
+	 */
 	protected function getMessageData()
 	{
 		if (!isset($this->message->from)) {
@@ -155,6 +180,10 @@ class Mailgun {
 		return (array) $this->message;
 	}
 
+	/**
+	 * Get attachment data
+	 * @return array
+	 */
 	protected function getAttachmentData()
 	{
 		return (array) $this->attachment;
@@ -164,7 +193,7 @@ class Mailgun {
 	 * Call the provided message builder.
 	 *
 	 * @param  Closure|string  $callback
-	 * @param  \Illuminate\Mail\Message  $message
+	 * @param  \Bogardo\Mailgun\Mailgun\Message  $message
 	 * @return mixed
 	 */
 	protected function callMessageBuilder($callback, $message)
