@@ -26,9 +26,9 @@ class Message {
 	public function from($email, $name = false)
 	{
 		if ($name) {
-			$this->from = "{$name} <{$email}>";
+			$this->from = "'{$name}' <{$email}>";
 		} else {
-			$this->from = "{$email} <{$email}>";
+			$this->from = "{$email}";
 		}
 		return $this;
 	}
@@ -36,16 +36,18 @@ class Message {
 	/**
 	 * Add a recipient to the message.
 	 *
-	 * @param  string  $email
+	 * @param  string|array  $email
 	 * @param  string  $name
 	 * @return \Bogardo\Mailgun\Mailgun\Message
 	 */
 	public function to($email, $name = false)
 	{
-		if ($name) {
-			$this->to = "{$name} <{$email}>";
+		if (is_array($email)) {
+			foreach ($email as $recipient) {
+				$this->addRecipient('to', $recipient);
+			}
 		} else {
-			$this->to = "{$email}";
+			$this->addRecipient('to', $email, $name);
 		}
 		return $this;
 	}
@@ -53,16 +55,18 @@ class Message {
 	/**
 	 * Add a carbon copy to the message.
 	 *
-	 * @param  string  $email
+	 * @param  string|array  $email
 	 * @param  string  $name
 	 * @return \Bogardo\Mailgun\Mailgun\Message
 	 */
 	public function cc($email, $name = false)
 	{
-		if ($name) {
-			$this->cc = "{$name} <{$email}>";
+		if (is_array($email)) {
+			foreach ($email as $recipient) {
+				$this->addRecipient('cc', $recipient);
+			}
 		} else {
-			$this->cc = "{$email}";
+			$this->addRecipient('cc', $email, $name);
 		}
 		return $this;
 	}
@@ -70,22 +74,47 @@ class Message {
 	/**
 	 * Add a blind carbon copy to the message.
 	 *
-	 * @param  string  $email
+	 * @param  string|array  $email
 	 * @param  string  $name
 	 * @return \Bogardo\Mailgun\Mailgun\Message
 	 */
 	public function bcc($email, $name = false)
 	{
-		if ($name) {
-			$this->bcc = "{$name} <{$email}>";
+		if (is_array($email)) {
+			foreach ($email as $recipient) {
+				$this->addRecipient('bcc', $recipient);
+			}
 		} else {
-			$this->bcc = "{$email}";
+			$this->addRecipient('bcc', $email, $name);
 		}
 		return $this;
 	}
+
+	/**
+	 * Add recipient to message
+	 * 
+	 * @param string  $type  to or cc or bcc
+	 * @param string  $email
+	 * @param string $name
+	 * @return void
+	 */
+	public function addRecipient($type, $email, $name = false)
+	{
+		if ($name) {
+			$recipient = "'{$name}' <{$email}>";
+		} else {
+			$recipient = "{$email}";
+		}
+
+		if (!empty($this->{$type})) {
+			$this->{$type} .= ', ' . $recipient;
+		} else {
+			$this->{$type} = $recipient;
+		}
+	}
 	
 	/**
-	 * Add a reply to address to the message.
+	 * Add a reply-to address to the message.
 	 *
 	 * @param  string  $email
 	 * @param  string  $name
@@ -94,7 +123,7 @@ class Message {
 	public function replyTo($email, $name = false)
 	{
 		if ($name) {
-			$this->{'h:Reply-To'} = "{$name} <{$email}>";
+			$this->{'h:Reply-To'} = "'{$name}' <{$email}>";
 		} else {
 			$this->{'h:Reply-To'} = $email;	
 		}

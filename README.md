@@ -166,6 +166,38 @@ Mailgun::send('emails.welcome', $data, function($message)
 });
 ```
 
+###### Batch Sending ######
+To send an email to multiple recipients you can also pass an `array` as the first parameter to the `to`, `cc` and/or `bcc` methods.
+
+```php
+Mailgun::send('emails.welcome', $data, function($message)
+{
+	$message->to(array(
+		'foo@bar.com',
+		'bar@foo.com'
+	));
+});
+```
+The array should only contain `strings` with the email address.
+If you still want to be able to set the recipient name there are two options:
+- Call the `to` method multiple times:
+```php
+Mailgun::send('emails.welcome', $data, function($message) use ($users)
+{  
+	foreach ($users as $user) {
+		$message->to($user->email, $user->name);
+	}
+});
+``` 
+- Give the strings in the `array` the correct format for including names: `'name' <email>`
+```php
+array(
+	"'Mr. Bar' <foo@bar.com>",
+	"'Ms. Foo' <bar@foo.com>"
+);
+```
+>Note: Mailgun limits the number of recipients per message to 1000
+
 ##### Sender #####
 In the Mailgun config file you have specified the `from` address. If you would like, you can override this using the `from` method. It accepts two arguments: `email` and `name` where the `name` field is optional.
 
