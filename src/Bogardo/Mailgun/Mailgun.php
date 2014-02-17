@@ -59,7 +59,14 @@ class Mailgun {
 	public function __construct(Environment $views)
 	{
 		$this->views = $views;
+	}
 
+	/**
+ 	* Initialise message configuration
+ 	* @return void
+ 	*/
+	protected function _init()
+	{
 		$this->from = Config::get('mailgun::from');
 
 		$this->mailgun = new Mg(Config::get('mailgun::api_key'));
@@ -91,6 +98,7 @@ class Mailgun {
 	 */
 	public function send($view, array $data, $callback)
 	{
+		$this->_init();
 		$this->callMessageBuilder($callback, $this->message);
 
 		$this->getMessage($view, $data);
@@ -109,6 +117,7 @@ class Mailgun {
 	 */
 	public function later($time, $view, array $data, $callback)
 	{
+		$this->_init();
 		$this->message->setDeliveryTime($time);
 		return $this->send($view, $data, $callback);
 	}
