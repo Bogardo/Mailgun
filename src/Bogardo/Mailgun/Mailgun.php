@@ -53,7 +53,7 @@ class Mailgun {
 	/**
 	 * Create a new Mailer instance.
 	 *
-	 * @param  \Illuminate\View\Environment  $views
+	 * @param  \Illuminate\View\Environment $views
 	 * @return void
 	 */
 	public function __construct(Environment $views)
@@ -96,9 +96,10 @@ class Mailgun {
 	 * @param  Closure|string  $callback
 	 * @return object Mailgun response containing http_response_body and http_response_code
 	 */
-	public function send($view, array $data, $callback)
+	public function send($view, array $data, $callback, $mustInit = true)
 	{
-		$this->_init();
+		if ($mustInit) $this->_init();
+
 		$this->callMessageBuilder($callback, $this->message);
 
 		$this->getMessage($view, $data);
@@ -119,7 +120,7 @@ class Mailgun {
 	{
 		$this->_init();
 		$this->message->setDeliveryTime($time);
-		return $this->send($view, $data, $callback);
+		return $this->send($view, $data, $callback, false);
 	}
 
 	/**
@@ -181,6 +182,7 @@ class Mailgun {
 			$this->alwaysFrom();
 		}
 
+		$this->attachment = null;
 		if (isset($this->message->attachment)) {
 			$this->attachment = $this->message->attachment;
 			unset($this->message->attachment);
