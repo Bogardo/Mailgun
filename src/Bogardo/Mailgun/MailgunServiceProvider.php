@@ -28,10 +28,8 @@ class MailgunServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		$view = $this->app['view'];
-
-		$this->app['mailgun'] = $this->app->share(function($app) use($view){
-			return new Mailgun($view);
+		$this->app['mailgun'] = $this->app->share(function($app){
+			return new Mailgun($app['view']);
 		});
 
 		$this->app->booting(function(){
