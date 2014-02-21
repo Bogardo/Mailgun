@@ -4,9 +4,10 @@ Bogardo/Mailgun
 A Mailgun package for Laravel 4 for sending emails using the Mailgun HTTP API.
 It's main advantage is that the syntax is the same as the Laravel Mail component and I also tried to give it very simmilar functionality. So if you've used that component before, using the Mailgun package should be a breeze.
 
-This package uses the [Mailgun-PHP](https://github.com/mailgun/mailgun-php) library version 1.7 behind the scenes.<br />
+> This package makes use of the [Mailgun-PHP](https://github.com/mailgun/mailgun-php) library, version 1.7.<br />
 
-> This package is available on Packagist: [https://packagist.org/packages/bogardo/mailgun](https://packagist.org/packages/bogardo/mailgun)
+<br />
+[![Total Downloads](https://poser.pugx.org/bogardo/mailgun/downloads.png)](https://packagist.org/packages/bogardo/mailgun) [![Monthly Downloads](https://poser.pugx.org/bogardo/mailgun/d/monthly.png)](https://packagist.org/packages/bogardo/mailgun)
 
 ## Table of contents ##
 - [Installation](#installation)
@@ -356,5 +357,5 @@ Mailgun::send('emails.welcome', $data, function($message)
 
 >If you pass more than 3 tags to the `tag` method it will only use the first 3, the others will be ignored.
 
-
+<br />
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Bogardo/mailgun/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
