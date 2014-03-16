@@ -120,6 +120,7 @@ class Message
 	 */
 	protected function prepareRecipientVariables($email, $variables)
 	{
+		$email = $this->getEmailFromString($email);
 		$this->variables[$email] = $variables;
 	}
 
@@ -135,6 +136,23 @@ class Message
 		}
 	}
 
+	/**
+	 * Get email adress from string
+	 * i.e.: "Foo Bar <foo@bar.com>" returns "foo@bar.com"
+	 *
+	 * @param $string
+	 * @return string
+	 */
+	protected function getEmailFromString($string)
+	{
+		foreach(preg_split('/\s/', $string) as $token) {
+			$email = filter_var(filter_var($token, FILTER_SANITIZE_EMAIL), FILTER_VALIDATE_EMAIL);
+			if ($email !== false) {
+				return $email;
+			}
+		}
+		return $string;
+	}
 
 	/**
 	 * Add recipient to message
