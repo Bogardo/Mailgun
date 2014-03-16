@@ -3,7 +3,10 @@
 use Illuminate\Support\Facades\Config;
 use Carbon\Carbon;
 
-class Message {
+class Message
+{
+
+	public $variables = array();
 
 	/**
 	 * Set default values
@@ -19,8 +22,8 @@ class Message {
 	/**
 	 * Add a "from" address to the message.
 	 *
-	 * @param  string  $email
-	 * @param  string  $name
+	 * @param  string $email
+	 * @param  string $name
 	 * @return \Bogardo\Mailgun\Mailgun\Message
 	 */
 	public function from($email, $name = false)
@@ -36,14 +39,17 @@ class Message {
 	/**
 	 * Add a recipient to the message.
 	 *
-	 * @param  string|array  $email
-	 * @param  string  $name
+	 * @param  string|array $email
+	 * @param  string $name
 	 * @return \Bogardo\Mailgun\Mailgun\Message
 	 */
 	public function to($email, $name = false)
 	{
 		if (is_array($email)) {
-			foreach ($email as $recipient) {
+			foreach ($email as $key => $recipient) {
+
+				$recipient = $this->parseRecipientVariables($recipient, $key);
+
 				$this->addRecipient('to', $recipient);
 			}
 		} else {
@@ -55,8 +61,8 @@ class Message {
 	/**
 	 * Add a carbon copy to the message.
 	 *
-	 * @param  string|array  $email
-	 * @param  string  $name
+	 * @param  string|array $email
+	 * @param  string $name
 	 * @return \Bogardo\Mailgun\Mailgun\Message
 	 */
 	public function cc($email, $name = false)
@@ -74,8 +80,8 @@ class Message {
 	/**
 	 * Add a blind carbon copy to the message.
 	 *
-	 * @param  string|array  $email
-	 * @param  string  $name
+	 * @param  string|array $email
+	 * @param  string $name
 	 * @return \Bogardo\Mailgun\Mailgun\Message
 	 */
 	public function bcc($email, $name = false)
@@ -91,10 +97,50 @@ class Message {
 	}
 
 	/**
+	 * Parse optional recipient variables
+	 *
+	 * @param string|array $recipient
+	 * @param int|string $key
+	 * @return string
+	 */
+	protected function parseRecipientVariables($recipient, $key)
+	{
+		if (is_array($recipient)) {
+			$this->prepareRecipientVariables($key, $recipient);
+			$recipient = $key;
+		}
+		return $recipient;
+	}
+
+	/**
+	 * Save recipient variables for later reference
+	 *
+	 * @param string $email
+	 * @param array $variables
+	 */
+	protected function prepareRecipientVariables($email, $variables)
+	{
+		$this->variables[$email] = $variables;
+	}
+
+	/**
+	 * Encode and register recipient variables
+	 *
+	 * @param array $variables
+	 */
+	public function recipientVariables(array $variables)
+	{
+		if (is_array($variables)) {
+			$this->{'recipient-variables'} = json_encode($variables);
+		}
+	}
+
+
+	/**
 	 * Add recipient to message
-	 * 
-	 * @param string  $type  to or cc or bcc
-	 * @param string  $email
+	 *
+	 * @param string $type to or cc or bcc
+	 * @param string $email
 	 * @param string $name
 	 * @return void
 	 */
@@ -112,29 +158,29 @@ class Message {
 			$this->{$type} = $recipient;
 		}
 	}
-	
+
 	/**
 	 * Add a reply-to address to the message.
 	 *
-	 * @param  string  $email
-	 * @param  string  $name
+	 * @param  string $email
+	 * @param  string $name
 	 * @return \Bogardo\Mailgun\Mailgun\Message
-	 */	
+	 */
 	public function replyTo($email, $name = false)
 	{
 		if ($name) {
 			$this->{'h:Reply-To'} = "'{$name}' <{$email}>";
 		} else {
-			$this->{'h:Reply-To'} = $email;	
+			$this->{'h:Reply-To'} = $email;
 		}
-		
+
 		return $this;
 	}
 
 	/**
 	 * Set the HTML body for the message.
 	 *
-	 * @param  string  $html
+	 * @param  string $html
 	 * @return \Bogardo\Mailgun\Mailgun\Message
 	 */
 	public function html($html)
@@ -146,7 +192,7 @@ class Message {
 	/**
 	 * Set the text body for the message.
 	 *
-	 * @param  string  $text
+	 * @param  string $text
 	 * @return \Bogardo\Mailgun\Mailgun\Message
 	 */
 	public function text($text)
@@ -158,7 +204,7 @@ class Message {
 	/**
 	 * Set the subject of the message.
 	 *
-	 * @param  string  $subject
+	 * @param  string $subject
 	 * @return \Bogardo\Mailgun\Mailgun\Message
 	 */
 	public function subject($subject)
@@ -169,9 +215,9 @@ class Message {
 
 	/**
 	 * Add (mailgun)tags to the message.
-	 * Tag limit is 3 
-	 * 
-	 * @param  string|array  $tags
+	 * Tag limit is 3
+	 *
+	 * @param  string|array $tags
 	 * @return \Bogardo\Mailgun\Mailgun\Message
 	 */
 	public function tag($tags)
@@ -184,8 +230,8 @@ class Message {
 	/**
 	 * Attach a file to the message.
 	 *
-	 * @param  string  $path
-	 * @param  string  $name
+	 * @param  string $path
+	 * @param  string $name
 	 * @return \Bogardo\Mailgun\Mailgun\Message
 	 */
 	public function attach($path, $name = null)
@@ -200,7 +246,7 @@ class Message {
 	/**
 	 * Embed a file in the message and get the CID.
 	 *
-	 * @param  string  $path
+	 * @param  string $path
 	 * @return string
 	 */
 	public function embed($path, $name = null)
@@ -215,7 +261,7 @@ class Message {
 	/**
 	 * Set the delivery time of the message.
 	 *
-	 * @param  string|int|array  $time
+	 * @param  string|int|array $time
 	 * @return \Bogardo\Mailgun\Mailgun\Message
 	 */
 	public function setDeliveryTime($time)
@@ -228,7 +274,7 @@ class Message {
 			$type = 'seconds';
 			$amount = $time;
 		}
-		
+
 		$now = Carbon::now(Config::get('app.timezone', 'UTC'));
 		$deliveryTime = Carbon::now(Config::get('app.timezone', 'UTC'));
 

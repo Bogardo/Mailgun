@@ -178,10 +178,18 @@ class Mailgun {
 	 */
 	protected function getMessageData()
 	{
+		//Check `from` address
 		if (!isset($this->message->from)) {
 			$this->alwaysFrom();
 		}
 
+		//Check recipient variables
+		if (!isset($this->message->{'recipient-variables'}) && !empty($this->message->variables)) {
+			$this->message->recipientVariables($this->message->variables);
+		}
+		unset($this->message->variables);
+
+		//Get attachment data
 		$this->attachment = null;
 		if (isset($this->message->attachment)) {
 			$this->attachment = $this->message->attachment;
