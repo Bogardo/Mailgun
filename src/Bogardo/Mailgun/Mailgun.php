@@ -3,10 +3,10 @@
 use Closure;
 use Mailgun\Mailgun as Mg;
 use Illuminate\View\Environment;
-use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Config;
 
-class Mailgun {
+class Mailgun
+{
 
 	/**
 	 * The view environment instance.
@@ -41,14 +41,7 @@ class Mailgun {
 	 *
 	 * @var array
 	 */
-	protected $attachment;	
-
-	/**
-	 * The IoC container instance.
-	 *
-	 * @var \Illuminate\Container
-	 */
-	protected $container;
+	protected $attachment;
 
 	/**
 	 * Create a new Mailer instance.
@@ -62,9 +55,9 @@ class Mailgun {
 	}
 
 	/**
- 	* Initialise message configuration
- 	* @return void
- 	*/
+	 * Initialise message configuration
+	 * @return void
+	 */
 	protected function _init()
 	{
 		$this->from = Config::get('mailgun::from');
@@ -77,23 +70,23 @@ class Mailgun {
 	/**
 	 * Set the global from address and name.
 	 *
-	 * @param  string  $address
-	 * @param  string  $name
+	 * @param  string $address
+	 * @param  string $name
 	 * @return void
 	 */
 	protected function alwaysFrom()
 	{
-		$name 	= $this->from['name'];
-		$email 	= $this->from['address'];
+		$name = $this->from['name'];
+		$email = $this->from['address'];
 		$this->message->from($email, $name);
 	}
 
 	/**
 	 * Send a new message
 	 *
-	 * @param  string|array  $view
-	 * @param  array  $data
-	 * @param  Closure|string  $callback
+	 * @param  string|array $view
+	 * @param  array $data
+	 * @param  Closure|string $callback
 	 * @return object Mailgun response containing http_response_body and http_response_code
 	 */
 	public function send($view, array $data, $callback, $mustInit = true)
@@ -110,10 +103,10 @@ class Mailgun {
 	/**
 	 * Queue a new e-mail message for sending after (n) seconds/minutes/hours/days.
 	 *
-	 * @param  int|string|array  $delay
-	 * @param  string|array  $view
-	 * @param  array  $data
-	 * @param  Closure|string  $callback
+	 * @param  int|string|array $delay
+	 * @param  string|array $view
+	 * @param  array $data
+	 * @param  Closure|string $callback
 	 * @return object Mailgun response containing http_response_body and http_response_code
 	 */
 	public function later($time, $view, array $data, $callback)
@@ -195,8 +188,8 @@ class Mailgun {
 			$this->attachment = $this->message->attachment;
 			unset($this->message->attachment);
 		}
-		
-		return (array) $this->message;
+
+		return (array)$this->message;
 	}
 
 	/**
@@ -205,35 +198,26 @@ class Mailgun {
 	 */
 	protected function getAttachmentData()
 	{
-		return (array) $this->attachment;
+		return (array)$this->attachment;
 	}
 
 	/**
 	 * Call the provided message builder.
 	 *
-	 * @param  Closure|string  $callback
-	 * @param  \Bogardo\Mailgun\Mailgun\Message  $message
+	 * @param  Closure $callback
+	 * @param  \Bogardo\Mailgun\Mailgun\Message $message
 	 * @return mixed
 	 */
-	protected function callMessageBuilder($callback, $message)
+	protected function callMessageBuilder(Closure $callback, $message)
 	{
-		if ($callback instanceof Closure)
-		{
-			return call_user_func($callback, $message);
-		}
-		elseif (is_string($callback))
-		{
-			return $this->container[$callback]->mail($message);
-		}
-
-		throw new \InvalidArgumentException("Callback is not valid.");
+		return call_user_func($callback, $message);
 	}
 
 	/**
 	 * Render the given view.
 	 *
-	 * @param  string  $view
-	 * @param  array   $data
+	 * @param  string $view
+	 * @param  array $data
 	 * @return \Illuminate\View\View
 	 */
 	protected function getView($view, $data)
