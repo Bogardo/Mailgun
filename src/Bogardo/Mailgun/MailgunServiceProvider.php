@@ -2,7 +2,8 @@
 
 use Illuminate\Support\ServiceProvider;
 
-class MailgunServiceProvider extends ServiceProvider {
+class MailgunServiceProvider extends ServiceProvider
+{
 
 	/**
 	 * Indicates if loading of the provider is deferred.

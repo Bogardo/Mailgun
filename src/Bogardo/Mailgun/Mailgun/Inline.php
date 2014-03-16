@@ -1,6 +1,7 @@
 <?php namespace Bogardo\Mailgun\Mailgun;
 
-Class Inline {
+Class Inline
+{
 	
 	public $cid;
 

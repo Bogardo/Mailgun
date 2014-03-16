@@ -1,6 +1,7 @@
 <?php namespace Bogardo\Mailgun\Mailgun;
 
-Class Attachment {
+Class Attachment
+{
 	
 	public $attachment;
 
