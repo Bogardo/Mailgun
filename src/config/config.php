@@ -48,4 +48,29 @@ return array(
 	 *
 	 */
 	'force_from_address' => false,
+
+
+	/**
+	 * Testing
+	 *
+	 * Catch All address
+	 *
+	 * Specify an email address that receives all emails send with Mailgun
+	 * This email address will overwrite all email addresses within messages
+	 */
+	'catch_all' => "",
+
+
+	/**
+	 * Testing
+	 *
+	 * Mailgun's testmode
+	 *
+	 * Send messages in test mode by setting this setting to true.
+	 * When you do this, Mailgun will accept the message but will
+	 * not send it. This is useful for testing purposes.
+	 *
+	 * Note: Mailgun does charge your account for messages sent in test mode.
+	 */
+	'testmode' => false
 );

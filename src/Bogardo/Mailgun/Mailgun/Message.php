@@ -17,6 +17,7 @@ class Message
 		//Set parameters from config
 		$this->setConfigReplyTo();
 		$this->setNativeSend();
+		$this->setTestMode();
 	}
 
 	/**
@@ -164,6 +165,8 @@ class Message
 	 */
 	public function addRecipient($type, $email, $name = false)
 	{
+		$email = $this->checkCatchAll($email);
+
 		if ($name) {
 			$recipient = "'{$name}' <{$email}>";
 		} else {
@@ -327,6 +330,16 @@ class Message
 	}
 
 	/**
+	 * Manually enable or disable testmode
+	 *
+	 * @param bool $inEnabled
+	 */
+	public function testmode($inEnabled = false)
+	{
+		$this->{'o:testmode'} = $inEnabled;
+	}
+
+	/**
 	 * Set default reply to address from the config
 	 */
 	protected function setConfigReplyTo()
@@ -345,6 +358,35 @@ class Message
 		if (Config::get('mailgun::force_from_address')) {
 			$this->{'o:native-send'} = 'yes';
 		}
+	}
+
+	/**
+	 * Enable/Disable testmode depending on config setting
+	 */
+	protected function setTestMode()
+	{
+		if (Config::get('mailgun::testmode')) {
+			$this->{'o:testmode'} = true;
+		}
+	}
+
+	/**
+	 * Checks the config file for a catch_all email address
+	 * If this is set it will overwrite all email addresses
+	 * in a message. All recipient name will stay intact.
+	 *
+	 * @param string $email
+	 *
+	 * @return string
+	 */
+	protected function checkCatchAll($email)
+	{
+		$catchAllMail = Config::get('mailgun::catch_all');
+		if ($catchAllMail) {
+			$extractedEmail = $this->getEmailFromString($email);
+			return str_replace($extractedEmail, $catchAllMail, $email);
+		}
+		return $email;
 	}
 
 }
