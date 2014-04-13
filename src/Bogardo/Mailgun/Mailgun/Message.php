@@ -249,6 +249,20 @@ class Message
 	}
 
 	/**
+	 * Add custom data to a message
+	 *
+	 * @param $key
+	 * @param $data
+	 *
+	 * @return $this
+	 */
+	public function data($key, $data)
+	{
+		$this->{"v:$key"} = json_encode($data);
+		return $this;
+	}
+
+	/**
 	 * Attach a file to the message.
 	 *
 	 * @param  string $path

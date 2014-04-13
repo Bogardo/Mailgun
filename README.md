@@ -24,6 +24,7 @@ It's main advantage is that the syntax is the same as the Laravel Mail component
 	- [Embedding Inline Images](#embedding-inline-images)
 	- [Scheduling](#scheduling)
 	- [Tagging](#tagging)
+	- [Custom Data](#custom-data)
 
 ## Installation ##
 
@@ -356,6 +357,21 @@ Mailgun::send('emails.welcome', $data, function($message)
 ```
 
 >If you pass more than 3 tags to the `tag` method it will only use the first 3, the others will be ignored.
+
+### Custom Data ###
+When sending, you can attach data to your messages. The data will be represented as a header within the email, X-Mailgun-Variables. The data is formatted in JSON and included in any webhook events related to the email containing the custom data.
+See the [Mailgun Documentation](http://documentation.mailgun.com/user_manual.html#attaching-data-to-messages) for more detailed information.
+
+To add custom data to a message you can use the `data` method.
+This method takes two parameters `key` and `value`.
+The `value` parameter will be json encoded 
+
+```php
+Mailgun::send('emails.welcome', $data, function($message)
+{
+	$message->data('key', 'value');
+});
+```
 
 <br />
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Bogardo/mailgun/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
