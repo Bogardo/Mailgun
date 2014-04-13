@@ -24,6 +24,8 @@ It's main advantage is that the syntax is the same as the Laravel Mail component
 	- [Embedding Inline Images](#embedding-inline-images)
 	- [Scheduling](#scheduling)
 	- [Tagging](#tagging)
+	- [Testmode](#testmode)
+	- [Catch all](#catch-all)
 	- [Custom Data](#custom-data)
 
 ## Installation ##
@@ -357,6 +359,28 @@ Mailgun::send('emails.welcome', $data, function($message)
 ```
 
 >If you pass more than 3 tags to the `tag` method it will only use the first 3, the others will be ignored.
+
+### Testmode ###
+You can send messages in test mode. When you do this, Mailgun will accept the message but will not send it. This is useful for testing purposes.
+
+> Note You are charged for messages sent in test mode.
+
+To enabled testmode for all emails set the `testmode` option in the config file to `true`.
+
+To enabled/disable testmode on a per message basis:
+```php
+Mailgun::send('emails.welcome', $data, function($message)
+{
+	$message->testmode(true);
+	//or
+	$message->testmode(false);
+});
+```
+
+### Catch all ###
+You can setup a catch-all address in the configuration file `catch_all`. 
+When enabled, all email addresses will be replaced by the catch-all address specified in the configuration file.
+This is useful for testing purposes.
 
 ### Custom Data ###
 When sending, you can attach data to your messages. The data will be represented as a header within the email, X-Mailgun-Variables. The data is formatted in JSON and included in any webhook events related to the email containing the custom data.
