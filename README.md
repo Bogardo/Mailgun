@@ -27,6 +27,7 @@ It's main advantage is that the syntax is the same as the Laravel Mail component
 	- [Testmode](#testmode)
 	- [Catch all](#catch-all)
 	- [Custom Data](#custom-data)
+	- [Email Validation](#email-validation)
 
 ## Installation ##
 
@@ -396,6 +397,121 @@ Mailgun::send('emails.welcome', $data, function($message)
 	$message->data('key', 'value');
 });
 ```
+
+### Email Validation ###
+Mailgun offers an email validation service which checks an email address on the following:
+* Syntax checks (RFC defined grammar)
+* DNS validation
+* Spell checks
+* Email Service Provider (ESP) specific local-part grammar (if available).
+
+#### Single address ####
+Validation a single address:
+
+```php
+Mailgun::validate("foo@bar.com")
+```
+
+The `validate` method returns the following object:
+```php
+stdClass Object
+(
+    [address] => foo@bar.com
+    [did_you_mean] => 
+    [is_valid] => 1
+    [parts] => stdClass Object
+        (
+            [display_name] => 
+            [domain] => bar.com
+            [local_part] => foo
+        )
+
+)
+```
+
+It will also try to correct typo's:
+```php
+Mailgun::validate("foo@gmil.com")
+```
+returns:
+```php
+stdClass Object
+(
+    [address] => foo@gmil.com
+    [did_you_mean] => foo@gmail.com
+    [is_valid] => 1
+    [parts] => stdClass Object
+        (
+            [display_name] => 
+            [domain] => gmil.com
+            [local_part] => foo
+        )
+
+)
+```
+#### Multiple addresses ####
+To validate multiple addresses you can use the `parse` method.
+
+This parses a delimiter separated list of email addresses into two lists: parsed addresses and unparsable portions. The parsed addresses are a list of addresses that are syntactically valid (and optionally have DNS and ESP specific grammar checks) the unparsable list is a list of characters sequences that the parser was not able to understand. These often align with invalid email addresses, but not always. Delimiter characters are comma (,) and semicolon (;).
+
+The `parse` method accepts two arguments:
+* `addresses`: An array of addresses **or** a delimiter separated string of addresses
+* `syntaxOnly`: Perform only syntax checks or DNS and ESP specific validation as well. (true by default)
+
+**Syntax only validation:**
+```php
+$addresses = 'Alice <alice@example.com>,bob@example.com,example.com';
+//or
+$addresses = array(
+	'Alice <alice@example.com>',
+	'bob@example.com',
+	'example.com'
+);
+
+Mailgun::parse($addresses);
+```
+returns:
+```php
+stdClass Object
+(
+    [parsed] => Array
+        (
+            [0] => Alice <alice@example.com>
+            [1] => bob@example.com
+        )
+
+    [unparseable] => Array
+        (
+            [0] => example.com
+        )
+
+)
+```
+
+**Validation including DNS and ESP validation:**
+```php
+$addresses = 'Alice <alice@example.com>,bob@example.com,example.com';
+Mailgun::parse($addresses, false);
+```
+returns:
+```php
+stdClass Object
+(
+    [parsed] => Array
+        (
+        )
+
+    [unparseable] => Array
+        (
+            [0] => Alice <alice@example.com>
+            [1] => bob@example.com
+            [2] => example.com
+        )
+
+)
+```
+
+
 
 <br />
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Bogardo/mailgun/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

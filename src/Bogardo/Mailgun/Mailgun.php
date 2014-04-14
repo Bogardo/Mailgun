@@ -47,7 +47,8 @@ class Mailgun
 	 * Create a new Mailer instance.
 	 *
 	 * @param  \Illuminate\View\Environment $views
-	 * @return void
+	 *
+	 * @return \Bogardo\Mailgun\Mailgun
 	 */
 	public function __construct(Environment $views)
 	{
@@ -70,8 +71,6 @@ class Mailgun
 	/**
 	 * Set the global from address and name.
 	 *
-	 * @param  string $address
-	 * @param  string $name
 	 * @return void
 	 */
 	protected function alwaysFrom()
@@ -84,9 +83,11 @@ class Mailgun
 	/**
 	 * Send a new message
 	 *
-	 * @param  string|array $view
-	 * @param  array $data
+	 * @param  string|array   $view
+	 * @param  array          $data
 	 * @param  Closure|string $callback
+	 * @param bool            $mustInit
+	 *
 	 * @return object Mailgun response containing http_response_body and http_response_code
 	 */
 	public function send($view, array $data, $callback, $mustInit = true)
@@ -101,12 +102,50 @@ class Mailgun
 	}
 
 	/**
+	 * @param $address
+	 *
+	 * @return mixed
+	 */
+	public function validate($address)
+	{
+		$this->mailgun = new Mg(Config::get('mailgun::public_api_key'));
+
+		$data = $this->mailgun->get("address/validate", array('address' => $address));
+		return $data->http_response_body;
+	}
+
+	/**
+	 * @param      $addresses
+	 * @param bool $syntaxOnly
+	 *
+	 * @return mixed
+	 */
+	public function parse($addresses, $syntaxOnly = true)
+	{
+		$this->mailgun = new Mg(Config::get('mailgun::public_api_key'));
+
+		if (is_array($addresses)) {
+			$addresses = implode(',', $addresses);
+		}
+
+		if ($syntaxOnly === true) {
+			$syntaxOnly = 'true';
+		} else {
+			$syntaxOnly = 'false';
+		}
+
+		$data = $this->mailgun->get("address/parse", array('addresses' => $addresses, 'syntax_only' => $syntaxOnly));
+		return $data->http_response_body;
+	}
+
+	/**
 	 * Queue a new e-mail message for sending after (n) seconds/minutes/hours/days.
 	 *
-	 * @param  int|string|array $delay
-	 * @param  string|array $view
-	 * @param  array $data
-	 * @param  Closure|string $callback
+	 * @param  int|string|array $time
+	 * @param  string|array     $view
+	 * @param  array            $data
+	 * @param  Closure|string   $callback
+	 *
 	 * @return object Mailgun response containing http_response_body and http_response_code
 	 */
 	public function later($time, $view, array $data, $callback)
@@ -167,7 +206,7 @@ class Mailgun
 
 	/**
 	 * Get message data
-	 * @return array \Bogardo\Mailgun\Mailgun\Message object casted to array
+	 * @return array Message object casted to array
 	 */
 	protected function getMessageData()
 	{
