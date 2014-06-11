@@ -248,6 +248,18 @@ class Message
 		return $this;
 	}
 
+    /**
+     * Add a Mailgun campaign ID(s) to the message
+     *
+     * @param mixed $value  an array of id's (maximum of 3) or a single id
+     * @return \Bogardo\Mailgun\Mailgun\Message
+     */
+    public function campaign($value)
+    {
+        $this->{'o:campaign'} = $value;
+        return $this;
+    }
+
 	/**
 	 * Add custom data to a message
 	 *
