@@ -33,10 +33,7 @@ It's main advantage is that the syntax is the same as the Laravel Mail component
 
 Open your `composer.json` file and add the following to the `require` key:
 
-	"bogardo/mailgun": "dev-master"
-
->All issues with compatibility for Laravel 4.1 and 4.0 have been resolved.
->You can still use one of the two tagged versions if you'd like.
+	"bogardo/mailgun": "v2.*"
 
 After adding the key, run composer update from the command line to install the package 
 
