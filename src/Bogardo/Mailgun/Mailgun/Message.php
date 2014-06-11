@@ -363,6 +363,7 @@ class Message
 	public function testmode($inEnabled = false)
 	{
 		$this->{'o:testmode'} = $inEnabled;
+        return $this;
 	}
 
 	/**
