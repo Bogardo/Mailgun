@@ -355,11 +355,12 @@ class Message
 		return $this;
 	}
 
-	/**
-	 * Manually enable or disable testmode
-	 *
-	 * @param bool $inEnabled
-	 */
+    /**
+     * Manually enable or disable testmode
+     *
+     * @param bool $inEnabled
+     * @return \Bogardo\Mailgun\Mailgun\Message
+     */
 	public function testmode($inEnabled = false)
 	{
 		$this->{'o:testmode'} = $inEnabled;
