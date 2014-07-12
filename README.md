@@ -24,6 +24,9 @@ It's main advantage is that the syntax is the same as the Laravel Mail component
 	- [Embedding Inline Images](#embedding-inline-images)
 	- [Scheduling](#scheduling)
 	- [Tagging](#tagging)
+	- [Campaigns](#campaigns)
+	- [Tracking](#tracking)
+	- [Dkim](#dkim)
 	- [Testmode](#testmode)
 	- [Catch all](#catch-all)
 	- [Custom Data](#custom-data)
@@ -33,7 +36,15 @@ It's main advantage is that the syntax is the same as the Laravel Mail component
 
 Open your `composer.json` file and add the following to the `require` key:
 
+### Laravel 4.2 ###
+
+	"bogardo/mailgun": "v3.0.*"
+
+### Laravel 4.1/4.0 ###
+
 	"bogardo/mailgun": "v2.*"
+
+---
 
 After adding the key, run composer update from the command line to install the package 
 
@@ -358,6 +369,66 @@ Mailgun::send('emails.welcome', $data, function($message)
 
 >If you pass more than 3 tags to the `tag` method it will only use the first 3, the others will be ignored.
 
+### Campaigns ###
+If you want your emails to be part of a campaign you created in Mailgun, you can add the campaign to a message with the `campaign` method.
+This method accepts a single ID `string` or an `array` of ID's (with a maximum of 3)
+
+```php
+Mailgun::send('emails.welcome', $data, function($message)
+{
+	$message->campaign('my_campaign_id');
+	//or
+	$message->campaign(array('campaign_1', 'campaign_2', 'campaign_3'));
+});
+```
+
+### Tracking ###
+You can toggle tracking on a per message basis.
+
+```php
+Mailgun::send('emails.welcome', $data, function($message)
+{
+	$message->tracking(true);
+	//or
+	$message->tracking(false);
+});
+```
+
+#### Tracking Clicks ####
+Toggle clicks tracking on a per-message basis. Has higher priority than domain-level setting.
+
+```php
+Mailgun::send('emails.welcome', $data, function($message)
+{
+	$message->trackClicks(true);
+	//or
+	$message->trackClicks(false);
+});
+```
+
+#### Tracking Opens ####
+Toggle opens tracking on a per-message basis. Has higher priority than domain-level setting.
+
+```php
+Mailgun::send('emails.welcome', $data, function($message)
+{
+	$message->trackOpens(true);
+	//or
+	$message->trackOpens(false);
+});
+```
+
+### DKIM ###
+Enable/disable DKIM signatures on per-message basis. ([see Mailgun Docs](http://documentation.mailgun.com/user_manual.html#verifying-your-domain))
+```php
+Mailgun::send('emails.welcome', $data, function($message)
+{
+	$message->dkim(true);
+	//or
+	$message->dkim(false);
+});
+```
+
 ### Testmode ###
 You can send messages in test mode. When you do this, Mailgun will accept the message but will not send it. This is useful for testing purposes.
 
@@ -395,7 +466,9 @@ Mailgun::send('emails.welcome', $data, function($message)
 });
 ```
 
-### Email Validation ###
+---
+
+## Email Validation ##
 Mailgun offers an email validation service which checks an email address on the following:
 * Syntax checks (RFC defined grammar)
 * DNS validation
