@@ -260,6 +260,59 @@ class Message
         return $this;
     }
 
+    /**
+     * Enables/disables DKIM signatures on per-message basis.
+     *
+     * @param bool $enabled
+     * @return \Bogardo\Mailgun\Mailgun\Message
+     */
+    public function dkim($enabled)
+    {
+        $enabled = ($enabled === true ? 'yes' : 'no');
+        $this->{'o:dkim'} = $enabled;
+        return $this;
+    }
+
+    /**
+     * Toggles tracking on a per-message basis
+     *
+     * @param bool $enabled
+     * @return \Bogardo\Mailgun\Mailgun\Message
+     */
+    public function tracking($enabled)
+    {
+        $enabled = ($enabled === true ? 'yes' : 'no');
+        $this->{'o:tracking'} = $enabled;
+        return $this;
+    }
+
+    /**
+     * Toggles clicks tracking on a per-message basis. Has higher priority than domain-level setting.
+     * Pass 'true', 'false' or 'htmlonly'.
+     *
+     * @param mixed $value
+     * @return \Bogardo\Mailgun\Mailgun\Message
+     */
+    public function trackClicks($value)
+    {
+        $value = ($value === 'htmlonly' ?: ($value === true ? 'yes' : 'no'));
+        $this->{'o:tracking-clicks'} = $value;
+        return $this;
+    }
+
+    /**
+     * Toggles opens tracking on a per-message basis. Has higher priority than domain-level setting.
+     *
+     * @param bool $enabled
+     * @return \Bogardo\Mailgun\Mailgun\Message
+     */
+    public function trackOpens($enabled)
+    {
+        $enabled = ($enabled === true ? 'yes' : 'no');
+        $this->{'o:tracking-opens'} = $enabled;
+        return $this;
+    }
+
 	/**
 	 * Add custom data to a message
 	 *
