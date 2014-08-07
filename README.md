@@ -38,11 +38,11 @@ Open your `composer.json` file and add the following to the `require` key:
 
 ### Laravel 4.2 ###
 
-	"bogardo/mailgun": "v3.0.*"
+	"bogardo/mailgun": "3.0.*"
 
 ### Laravel 4.1/4.0 ###
 
-	"bogardo/mailgun": "v2.*"
+	"bogardo/mailgun": "2.*"
 
 ---
 
