@@ -1,11 +1,11 @@
 <?php namespace Bogardo\Mailgun;
 
+use Bogardo\Mailgun\Mailgun\Message;
 use Closure;
-use Mailgun\Mailgun as Mg;
 use Illuminate\View\Factory;
-use Illuminate\Support\Facades\Config;
+use Config;
 
-class Mailgun
+class Mailgun extends MailgunApi
 {
 
 	/**
@@ -23,13 +23,6 @@ class Mailgun
 	protected $from;
 
 	/**
-	 * Mailgun Object
-	 *
-	 * @var \Bogardo\Mailgun\Mailgun
-	 */
-	protected $mailgun;
-
-	/**
 	 * Mailgun message Object
 	 *
 	 * @var \Bogardo\Mailgun\Mailgun\Message
@@ -42,6 +35,13 @@ class Mailgun
 	 * @var array
 	 */
 	protected $attachment;
+
+    /**
+     * Mailgun lists Object
+     *
+     * @var \Bogardo\Mailgun\Mailgun\Lists
+     */
+    protected $lists;
 
 	/**
 	 * Create a new Mailer instance.
@@ -63,9 +63,7 @@ class Mailgun
 	{
 		$this->from = Config::get('mailgun::from');
 
-		$this->mailgun = new Mg(Config::get('mailgun::api_key'));
-
-		$this->message = new Mailgun\Message();
+		$this->message = new Message();
 	}
 
 	/**
@@ -98,7 +96,10 @@ class Mailgun
 
 		$this->getMessage($view, $data);
 
-		return $this->mailgun->sendMessage(Config::get('mailgun::domain'), $this->getMessageData(), $this->getAttachmentData());
+
+        //dd($this->getMessageData());
+
+		$this->mailgun()->sendMessage(Config::get('mailgun::domain'), $this->getMessageData(), $this->getAttachmentData());
 	}
 
 	/**
@@ -108,9 +109,7 @@ class Mailgun
 	 */
 	public function validate($address)
 	{
-		$this->mailgun = new Mg(Config::get('mailgun::public_api_key'));
-
-		$data = $this->mailgun->get("address/validate", array('address' => $address));
+		$data = $this->mailgun()->get("address/validate", ['address' => $address]);
 		return $data->http_response_body;
 	}
 
@@ -122,8 +121,6 @@ class Mailgun
 	 */
 	public function parse($addresses, $syntaxOnly = true)
 	{
-		$this->mailgun = new Mg(Config::get('mailgun::public_api_key'));
-
 		if (is_array($addresses)) {
 			$addresses = implode(',', $addresses);
 		}
@@ -134,7 +131,7 @@ class Mailgun
 			$syntaxOnly = 'false';
 		}
 
-		$data = $this->mailgun->get("address/parse", array('addresses' => $addresses, 'syntax_only' => $syntaxOnly));
+		$data = $this->mailgun()->get("address/parse", ['addresses' => $addresses, 'syntax_only' => $syntaxOnly]);
 		return $data->http_response_body;
 	}
 
@@ -154,6 +151,11 @@ class Mailgun
 		$this->message->setDeliveryTime($time);
 		return $this->send($view, $data, $callback, false);
 	}
+
+    public function lists()
+    {
+        return $this->lists = new Lists($this->mailgun());
+    }
 
 	/**
 	 * Get HTML and/or Text message
