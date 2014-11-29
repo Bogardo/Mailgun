@@ -1,9 +1,9 @@
 <?php namespace Bogardo\Mailgun;
 
-use Bogardo\Mailgun\Mailgun\Message;
+use Config;
 use Closure;
 use Illuminate\View\Factory;
-use Config;
+use Bogardo\Mailgun\Mailgun\Message;
 
 class Mailgun extends MailgunApi
 {
@@ -39,7 +39,7 @@ class Mailgun extends MailgunApi
     /**
      * Mailgun lists Object
      *
-     * @var \Bogardo\Mailgun\Mailgun\Lists
+     * @var \Bogardo\Mailgun\Lists
      */
     protected $lists;
 
@@ -153,6 +153,8 @@ class Mailgun extends MailgunApi
 	}
 
     /**
+     * Access mailinglists
+     *
      * @return Lists
      */
     public function lists()
@@ -162,6 +164,7 @@ class Mailgun extends MailgunApi
 
 	/**
 	 * Get HTML and/or Text message
+     *
 	 * @param  string $view
 	 * @param  array $data
 	 */
@@ -200,6 +203,7 @@ class Mailgun extends MailgunApi
 
 	/**
 	 * Get rendered text body
+     *
 	 * @param  string $view
 	 * @param  array $data
 	 */
@@ -211,6 +215,7 @@ class Mailgun extends MailgunApi
 
 	/**
 	 * Get message data
+     *
 	 * @return array Message object casted to array
 	 */
 	protected function getMessageData()
@@ -238,6 +243,7 @@ class Mailgun extends MailgunApi
 
 	/**
 	 * Get attachment data
+     *
 	 * @return array
 	 */
 	protected function getAttachmentData()

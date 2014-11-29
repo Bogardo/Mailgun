@@ -49,6 +49,8 @@ class Mailinglist extends MailgunApi {
     }
 
     /**
+     * Update this mailinglist
+     *
      * @param array $params
      *
      * @return $this
@@ -60,6 +62,8 @@ class Mailinglist extends MailgunApi {
     }
 
     /**
+     * Delete this mailinglist
+     *
      * @return bool
      */
     public function delete()
@@ -69,6 +73,8 @@ class Mailinglist extends MailgunApi {
     }
 
     /**
+     * Get all members
+     *
      * @param array $params
      *
      * @return Collection
@@ -91,6 +97,25 @@ class Mailinglist extends MailgunApi {
     }
 
     /**
+     * Get a single member
+     *
+     * @param $memberaddress
+     *
+     * @return Member
+     */
+    public function member($memberaddress)
+    {
+        $result = $this->mailgun()->get("lists/{$this->address}/members/{$memberaddress}")->http_response_body->member;
+
+        $member = new Member();
+        $member->setMember($result);
+
+        return $member;
+    }
+
+    /**
+     * Add a new member to this mailinglist
+     *
      * @param array $params
      *
      * @return Member
@@ -103,15 +128,20 @@ class Mailinglist extends MailgunApi {
 
         $member = new Member();
         $member->setMember(
-            $this->mailgun()->post("lists/{$this->address}/members",
-            $this->_parseParams($params))->http_response_body->member
+            $this->mailgun()->post(
+                "lists/{$this->address}/members",
+                $this->_parseParams($params)
+            )->http_response_body->member
         );
 
         return $member;
 
     }
 
+
     /**
+     * Add multiple members to this mailinglist
+     *
      * @param array  $members
      * @param bool   $upsert
      *
@@ -139,6 +169,33 @@ class Mailinglist extends MailgunApi {
     }
 
     /**
+     * Update a member in this mailinglist
+     *
+     * @param $memberaddress
+     * @param $params
+     *
+     * @return Member
+     */
+    public function updateMember($memberaddress, $params)
+    {
+        if (isset($params['vars']) && (is_array($params['vars']) || is_object($params['vars'])) ) {
+            $params['vars'] = json_encode($params['vars']);
+        }
+
+        $member = new Member();
+        $member->setMember(
+            $this->mailgun()->put(
+                "lists/{$this->address}/members/{$memberaddress}",
+                $this->_parseParams($params)
+            )->http_response_body->member
+        );
+
+        return $member;
+    }
+
+    /**
+     * Delete a member from this mailinglist
+     *
      * @param string $memberaddress
      *
      * @return bool
@@ -163,6 +220,8 @@ class Mailinglist extends MailgunApi {
     }
 
     /**
+     * Convert the created_at date to a Carbon instance when accessed
+     *
      * @param $name
      *
      * @return Carbon
@@ -175,6 +234,8 @@ class Mailinglist extends MailgunApi {
     }
 
     /**
+     * Convert given date to a Carbon instance
+     *
      * @param $date
      *
      * @return Carbon

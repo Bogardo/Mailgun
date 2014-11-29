@@ -13,23 +13,36 @@ It's main advantage is that the syntax is the same as the Laravel Mail component
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Usage](#usage)
-	- [Views](#views)
-	- [Data](#data)
-	- [Mail options](#mail-options)
-		- [Recipients](#recipients)
-		- [Sender](#sender)
-		- [Subject](#subject)
-		- [Reply-to](#reply-to)
-	- [Attachments](#attachments)
-	- [Embedding Inline Images](#embedding-inline-images)
-	- [Scheduling](#scheduling)
-	- [Tagging](#tagging)
-	- [Campaigns](#campaigns)
-	- [Tracking](#tracking)
-	- [Dkim](#dkim)
-	- [Testmode](#testmode)
-	- [Catch all](#catch-all)
-	- [Custom Data](#custom-data)
+    - [Messages](#messages) 	
+	    - [Views](#views)
+	    - [Data](#data)
+	    - [Mail options](#mail-options)
+		    - [Recipients](#recipients)
+		    - [Sender](#sender)
+		    - [Subject](#subject)
+		    - [Reply-to](#reply-to)
+	    - [Attachments](#attachments)
+	    - [Embedding Inline Images](#embedding-inline-images)
+    	- [Scheduling](#scheduling)
+	    - [Tagging](#tagging)
+	    - [Campaigns](#campaigns)
+	    - [Tracking](#tracking)
+	    - [Dkim](#dkim)
+	    - [Testmode](#testmode)
+	    - [Catch all](#catch-all)
+	    - [Custom Data](#custom-data)
+	- [Mailing lists](#mailing-lists)
+        - [All](#all)
+        - [Get](#get)
+        - [Create](#create)
+        - [Update](#update)
+        - [Delete](#delete)
+        - [Get members](#get-members)
+        - [Get member](#get-member)
+        - [Add member](#add-member)
+        - [Add members](#add-members)
+        - [Update member](#update-member)
+        - [Delete member](#delete-member)
 	- [Email Validation](#email-validation)
 
 ## Installation ##
@@ -68,6 +81,8 @@ After the config file has been published you can find it at: `app/config/package
 In it you must specify the `from` details, your Mailgun `api key` and the Mailgun `domain`.
 
 ## Usage ##
+
+## Messages ##
 The Mailgun package offers most of the functionality as the Laravel 4 [Mail component](http://laravel.com/docs/mail).
 
 The `Mailgun::send` method may be used to send an e-mail message:
@@ -465,6 +480,266 @@ Mailgun::send('emails.welcome', $data, function($message)
 	$message->data('key', 'value');
 });
 ```
+
+---
+
+## Mailing lists ##
+You can programmatically create mailing lists using Mailgun Mailing List API. A mailing list is a group of members (recipients) which itself has an email address, like developers@mailgun.net. This address becomes an ID for this mailing list.
+
+When you send a message to developers@mailgun.net, all members of the list will receive a copy of it.
+
+### All ###
+Get all mailing lists
+
+```php
+Mailgun::lists()->all();
+```
+
+```php
+Mailgun::lists()->all(['limit' => 5]);
+```
+
+##### Parameters
+Parameter | Type | Description  | _
+--------- | ---- | ------------ | ---
+address  | string | Find a mailing list by it’s address | optional
+limit    | int    | Maximum number of records to return (100 by default) | optional
+skip     | int    | Records to skip (0 by default) | optional
+
+Returns a Laravel `Collection` of `Mailinglist` objects.
+
+
+### Get ###
+Get a single mailing list by address
+
+```php
+Mailgun::lists()->get("developers@example.com");
+```
+
+Returns a single `Mailinglist` object.
+
+### Create ###
+Create a new mailing list
+
+```php
+Mailgun::lists()->create([
+    'address' => 'address1@mg.bogardo.com'
+]);
+```
+
+##### Parameters
+Parameter | Type | Description | _
+--------- | ---- | ----------- | ---
+address  | string | A valid email address for the mailing list, e.g. `developers@example.com`, or `Developers <developers@example.com>` | required
+name    | string    | Mailing list name, e.g. `Developers` | optional
+description | string | A description for the mailing list | optional
+access_level | string | List access level, one of: `readonly` (default), `members` or `everyone` | optional
+
+Returns the newly created `Mailinglist` object
+
+### Update ###
+Update an existing mailing list
+
+```php
+Mailgun::lists()->update("developers@example.com", [
+    'name' => 'New name',
+    'description' => 'Test mailing list'
+]);
+```
+
+Or if you already have the `Mailinglist` object available.
+
+```php
+$list = Mailgun::lists()->get("developers@example.com");
+
+$list->update(['name' => 'New name']);
+```
+
+##### Parameters
+Parameter | Type | Description | _
+--------- | ---- | ----------- | ---
+address  | string | New mailing list address, e.g. `devs@example.com` | optional
+name    | string    | New name | optional
+description | string | New description | optional
+access_level | string | List access level, one of: `readonly` (default), `members` or `everyone` | optional
+
+Returns the updated `Mailinglist` object.
+
+### Delete ###
+Delete a mailing list
+
+```php
+Mailgun::lists()->delete('developers@example.com');
+```
+
+Or if you already have the `Mailinglist` object available.
+
+```php
+$list = Mailgun::lists()->get("developers@example.com");
+
+$list->delete();
+```
+
+Returns `true` if successfull.
+
+### Get members ###
+Get members for a mailing list
+
+```php
+Mailgun::lists()->members("developers@example.com");
+```
+
+```php
+Mailgun::lists()->members("developers@example.com", [
+    'subscribed' => true,
+    'limit' => 10
+]);
+```
+
+Or if you already have the `Mailinglist` object available.
+
+```php
+$list->members();
+```
+
+```php
+$list->members([
+    'subscribed' => true,
+    'limit' => 10
+]);
+```
+
+##### Parameters
+Parameter | Type | Description | _
+--------- | ---- | ----------- | ---
+subscribed  | bool | `true` to list subscribed, `false` for unsubscribed, list all if not set | optional
+limit    | int    | Maximum numbers of records to return (100 default) | optional
+skip | int | Records to skip (0 default) | optional
+
+
+
+Returns a Laravel `Collection` of `Member` objects.
+
+### Get member ###
+Get a single member from a mailing list
+
+```php
+Mailgun::lists()->member("developers@example.com", "user@example.com");
+```
+
+Or if you already have the `Mailinglist` object available.
+
+```php
+$list->member("user@example.com");
+```
+
+Returns a single `Member` object.
+
+### Add member ###
+Add a member to a mailing list
+
+```php
+Mailgun::lists()->addMember('developers@example.com', [
+    'address' => 'user@example.com',
+    'name' => 'John Doe',
+    'vars' => ['age' => 43, 'gender' => 'male'],
+    'subscribed' => true,
+    'upsert' => true
+]);
+```
+
+Or if you already have the `Mailinglist` object available.
+```php
+$list->addMember([
+    'address' => 'user@example.com',
+    'name' => 'John Doe',
+    'vars' => ['age' => 43, 'gender' => 'male'],
+    'subscribed' => true,
+    'upsert' => true
+]);
+```
+
+##### Parameters
+Parameter | Type   | Description | _
+--------- | ------ | ----------- | ---
+address   | string | Valid email address, e.g. `John <john@example.com>` or just `john@example.com` | required
+name      | string | Member name | optional
+vars      | array  | array with arbitrary keys and values | optional
+subscribed| bool   | `true` to add as subscribed (default), `false` as unsubscribed | optional
+upsert    | bool   | `true` to update member if present, `false` to raise error in case of a duplicate member (default) | optional
+
+Returns the newly created `Member` object.
+
+### Add members ###
+Add multiple members to a mailing list, up to a 1000 per call
+
+```php
+Mailgun::lists()->addMembers("developers@example.com", [
+    [
+        "address" => "jane@example.com",
+        "name" => "Jane Doe"
+    ],
+    [
+        "address" => "john@example.com",
+        "name" => "John Doe",
+        "vars" => [
+            "age" => 48,
+            "country" => "Japan"
+        ]
+    ]
+], true);
+```
+
+##### Parameters
+Parameter | Type   | Description | _
+--------- | ------ | ----------- | ---
+members   | array | array of members | required
+upsert    | bool | `true` to update existing members, `false` to ignore duplicates (default) | optional
+
+Returns the `Mailinglist` the members where added to
+
+### Update member ###
+Update an existing member of a mailing list
+
+```php
+Mailgun::lists()->updateMember('address1@mg.bogardo.com', 'user@example.com', [
+    'address' => 'user@example.com',
+    'name' => 'John Doe',
+    'vars' => ['age' => 43, 'gender' => 'male'],
+    'subscribed' => true,
+]);
+```
+
+Or if you already have the `Mailinglist` object available.
+```php
+$list->updateMember('user@example.com', [
+    'subscribed' => false,
+]);
+```
+
+##### Parameters
+Parameter | Type   | Description | _
+--------- | ------ | ----------- | ---
+address   | string | Valid email address, e.g. `John <john@example.com>` or just `john@example.com` | optional
+name      | string | Member name | optional
+vars      | array  | array with arbitrary keys and values | optional
+subscribed| bool   | `true` to add as subscribed (default), `false` as unsubscribed | optional
+
+Returns the updated `Member` object.
+
+### Delete member ###
+Delete a mailinglist member
+
+```php
+Mailgun::lists()->deleteMember("developers@example.com", "john@example.com");
+```
+
+Or if you already have the `Mailinglist` object available.
+```php
+$list->deleteMember('user@example.com');
+```
+
+Returns `true` if successfull.
 
 ---
 
