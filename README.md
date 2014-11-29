@@ -51,7 +51,7 @@ Open your `composer.json` file and add the following to the `require` key:
 
 ### Laravel 4.2 ###
 
-	"bogardo/mailgun": "3.0.*"
+	"bogardo/mailgun": "3.1.*"
 
 ### Laravel 4.1/4.0 ###
 
