@@ -152,9 +152,12 @@ class Mailgun extends MailgunApi
 		return $this->send($view, $data, $callback, false);
 	}
 
+    /**
+     * @return Lists
+     */
     public function lists()
     {
-        return $this->lists = new Lists($this->mailgun());
+        return $this->lists = new Lists();
     }
 
 	/**

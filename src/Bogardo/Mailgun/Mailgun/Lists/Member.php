@@ -14,12 +14,22 @@ class Member extends MailgunApi {
     public $vars;
 
 
-    public function __construct($item)
+    public function __construct($address = "")
     {
-        $this->address    = $item->address;
-        $this->name       = $item->name;
-        $this->subscribed = $item->subscribed;
-        $this->vars       = $item->vars;
+        if ($address) {
+            $this->address;
+        }
+    }
+
+    public function setMember($member)
+    {
+        $this->address    = $member->address;
+        $this->name       = $member->name;
+        $this->subscribed = $member->subscribed;
+        $this->vars       = $member->vars;
+        unset($this->mailgun);
+
+        return $this;
     }
 
 }

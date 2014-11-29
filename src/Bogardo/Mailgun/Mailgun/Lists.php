@@ -2,7 +2,6 @@
 
 
 use Bogardo\Mailgun\Lists\Mailinglist;
-use Bogardo\Mailgun\Lists\Member;
 use Illuminate\Support\Collection;
 
 class Lists extends MailgunApi {
@@ -18,7 +17,9 @@ class Lists extends MailgunApi {
         $results = $this->mailgun()->get("lists")->http_response_body;
         if ($results) {
             foreach ($results->items as $item) {
-                $items->push(new Mailinglist($item));
+                $mailinglist = new Mailinglist();
+                $mailinglist->setList($item);
+                $items->push($mailinglist);
             }
         }
 
@@ -34,29 +35,22 @@ class Lists extends MailgunApi {
     {
         $result = $this->mailgun()->get("lists/{$listaddress}")->http_response_body;
         if ($result) {
-            return new Mailinglist($result->list);
+            $mailinglist = new Mailinglist();
+            $mailinglist->setList($result->list);
+            return $mailinglist;
         }
     }
 
     /**
-     * @param       $listaddress
-     * @param array $params
+     * @param string $listaddress
+     * @param array  $params
      *
      * @return Collection
      */
     public function members($listaddress, $params = [])
     {
-        $items = new Collection([]);
-
-        $result = $this->mailgun()->get("lists/{$listaddress}/members", $this->_parseParams($params))->http_response_body;
-
-        if ($result) {
-            foreach ($result->items as $item) {
-                $items->push(new Member($item));
-            }
-        }
-
-        return $items;
+        $mailinglist = new Mailinglist($listaddress);
+        return $mailinglist->members($params);
     }
 
     /**
@@ -66,7 +60,9 @@ class Lists extends MailgunApi {
      */
     public function create($params = [])
     {
-        return new Mailinglist($this->mailgun()->post("lists", $params)->http_response_body->list);
+        $mailinglist = new Mailinglist();
+        $mailinglist->setList($this->mailgun()->post("lists", $params)->http_response_body->list);
+        return $mailinglist;
     }
 
     /**
@@ -77,7 +73,8 @@ class Lists extends MailgunApi {
      */
     public function update($listaddress, $params = [])
     {
-        return new Mailinglist($this->mailgun()->put("lists/{$listaddress}", $params)->http_response_body->list);
+        $mailinglist = new Mailinglist($listaddress);
+        return $mailinglist->update($params);
     }
 
     /**
@@ -87,8 +84,8 @@ class Lists extends MailgunApi {
      */
     public function delete($listaddress)
     {
-        $this->mailgun()->delete("lists/{$listaddress}");
-        return true;
+        $mailinglist = new Mailinglist($listaddress);
+        return $mailinglist->delete();
     }
 
     /**
@@ -99,14 +96,9 @@ class Lists extends MailgunApi {
      */
     public function addMember($listaddress, $params = [])
     {
-        if (isset($params['vars']) && (is_array($params['vars']) || is_object($params['vars'])) ) {
-            $params['vars'] = json_encode($params['vars']);
-        }
+        $mailinglist = new Mailinglist($listaddress);
 
-        return new Member(
-            $this->mailgun()->post("lists/{$listaddress}/members",
-            $this->_parseParams($params))->http_response_body->member
-        );
+        return $mailinglist->addMember($params);
     }
 
     /**
@@ -118,20 +110,9 @@ class Lists extends MailgunApi {
      */
     public function addMembers($listaddress, $members = [], $upsert = false)
     {
-        $upsert = ($upsert ? 'yes' : 'no');
+        $mailinglist = new Mailinglist($listaddress);
 
-        foreach ($members as $key => $member) {
-            if (!is_string($member)) {
-                $members[$key] = $this->_parseMemberParams($member);
-            }
-        }
-
-        return new Mailinglist(
-            $this->mailgun(true)->post("lists/{$listaddress}/members.json", [
-                'members' => json_encode($members),
-                'upsert' => $upsert
-            ])->http_response_body->list
-        );
+        return $mailinglist->addMembers($members, $upsert);
     }
 
     /**
@@ -142,16 +123,10 @@ class Lists extends MailgunApi {
      */
     public function deleteMember($listaddress, $memberaddress)
     {
-        $this->mailgun()->delete("lists/{$listaddress}/members/{$memberaddress}");
-        return true;
-    }
+        $mailinglist = new Mailinglist($listaddress);
+        $mailinglist->deleteMember($memberaddress);
 
-    protected function _parseMemberParams($member)
-    {
-        if (isset($member['vars']) && is_string($member['vars'])) {
-            $member['vars'] = json_decode($member['vars']);
-        }
-        return $member;
+        return true;
     }
 
 } 

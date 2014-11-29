@@ -20,28 +20,59 @@ class Mailinglist extends MailgunApi {
 
     protected $created_at;
 
-    public function __construct($item)
+    /**
+     * @param string $address
+     */
+    public function __construct($address = "")
     {
-        $this->name = $item->name;
-        $this->address = $item->address;
-        $this->description = $item->description;
-        $this->members_count = $item->members_count;
-        $this->access_level = $item->access_level;
-        $this->created_at = $this->parseDate($item->created_at)->format('Y-m-d H:i:s');
-    }
-
-    public function __get($name)
-    {
-        if ($name == 'created_at') {
-            return $this->parseDate($this->created_at);
+        if ($address) {
+            $this->address = $address;
         }
     }
 
-    private function parseDate($date)
+    /**
+     * @param $list
+     *
+     * @return $this
+     */
+    public function setList($list)
     {
-        return new Carbon($date, Config::get('app.timezone'));
+        $this->name = $list->name;
+        $this->address = $list->address;
+        $this->description = $list->description;
+        $this->members_count = $list->members_count;
+        $this->access_level = $list->access_level;
+        $this->created_at = $this->parseDate($list->created_at)->format('Y-m-d H:i:s');
+        unset($this->mailgun);
+
+        return $this;
     }
 
+    /**
+     * @param array $params
+     *
+     * @return $this
+     */
+    public function update($params = [])
+    {
+        $this->setList($this->mailgun()->put("lists/{$this->address}", $params)->http_response_body->list);
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function delete()
+    {
+        $this->mailgun()->delete("lists/{$this->address}");
+        return true;
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return Collection
+     */
     public function members($params = [])
     {
         $items = new Collection([]);
@@ -50,26 +81,43 @@ class Mailinglist extends MailgunApi {
 
         if ($result) {
             foreach ($result->items as $item) {
-                $items->push(new Member($item));
+                $member = new Member();
+                $member->setMember($item);
+                $items->push($member);
             }
         }
 
         return $items;
     }
 
+    /**
+     * @param array $params
+     *
+     * @return Member
+     */
     public function addMember($params = [])
     {
+        if (isset($params['vars']) && (is_array($params['vars']) || is_object($params['vars'])) ) {
+            $params['vars'] = json_encode($params['vars']);
+        }
+
+        $member = new Member();
+        $member->setMember(
+            $this->mailgun()->post("lists/{$this->address}/members",
+            $this->_parseParams($params))->http_response_body->member
+        );
+
+        return $member;
 
     }
 
     /**
-     * @param string $listaddress
      * @param array  $members
      * @param bool   $upsert
      *
      * @return Mailinglist
      */
-    public function addMembers($listaddress, $members = [], $upsert = false)
+    public function addMembers($members = [], $upsert = false)
     {
         $upsert = ($upsert ? 'yes' : 'no');
 
@@ -79,26 +127,33 @@ class Mailinglist extends MailgunApi {
             }
         }
 
-        return new Mailinglist(
-            $this->mailgun(true)->post("lists/{$listaddress}/members.json", [
+        $mailinglist = new Mailinglist();
+        $mailinglist->setList(
+            $this->mailgun(true)->post("lists/{$this->address}/members.json", [
                 'members' => json_encode($members),
                 'upsert' => $upsert
             ])->http_response_body->list
         );
+
+        return $mailinglist;
     }
 
     /**
-     * @param string $listaddress
      * @param string $memberaddress
      *
      * @return bool
      */
-    public function deleteMember($listaddress, $memberaddress)
+    public function deleteMember($memberaddress)
     {
-        $this->mailgun()->delete("lists/{$listaddress}/members/{$memberaddress}");
+        $this->mailgun()->delete("lists/{$this->address}/members/{$memberaddress}");
         return true;
     }
 
+    /**
+     * @param $member
+     *
+     * @return mixed
+     */
     protected function _parseMemberParams($member)
     {
         if (isset($member['vars']) && is_string($member['vars'])) {
@@ -107,5 +162,26 @@ class Mailinglist extends MailgunApi {
         return $member;
     }
 
+    /**
+     * @param $name
+     *
+     * @return Carbon
+     */
+    public function __get($name)
+    {
+        if ($name == 'created_at') {
+            return $this->parseDate($this->created_at);
+        }
+    }
+
+    /**
+     * @param $date
+     *
+     * @return Carbon
+     */
+    private function parseDate($date)
+    {
+        return new Carbon($date, Config::get('app.timezone'));
+    }
 
 }
