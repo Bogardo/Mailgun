@@ -485,9 +485,9 @@ Mailgun::send('emails.welcome', $data, function($message)
 ---
 
 ## Mailing lists ##
-You can programmatically create mailing lists using Mailgun Mailing List API. A mailing list is a group of members (recipients) which itself has an email address, like developers@mailgun.net. This address becomes an ID for this mailing list.
+You can programmatically create mailing lists using Mailgun Mailing List API. A mailing list is a group of members (recipients) which itself has an email address, like developers@example.com. This address becomes an ID for this mailing list.
 
-When you send a message to developers@mailgun.net, all members of the list will receive a copy of it.
+When you send a message to developers@example.com, all members of the list will receive a copy of it.
 
 ### All ###
 Get all mailing lists
@@ -503,7 +503,7 @@ Mailgun::lists()->all(['limit' => 5]);
 ##### Parameters
 Parameter | Type | Description  | _
 --------- | ---- | ------------ | ---
-address  | string | Find a mailing list by it’s address | optional
+address  | string | Find a mailing list by its address | optional
 limit    | int    | Maximum number of records to return (100 by default) | optional
 skip     | int    | Records to skip (0 by default) | optional
 
@@ -524,7 +524,7 @@ Create a new mailing list
 
 ```php
 Mailgun::lists()->create([
-    'address' => 'address1@mg.bogardo.com'
+    'address' => 'developers@example.com'
 ]);
 ```
 
@@ -703,7 +703,7 @@ Returns the `Mailinglist` the members where added to
 Update an existing member of a mailing list
 
 ```php
-Mailgun::lists()->updateMember('address1@mg.bogardo.com', 'user@example.com', [
+Mailgun::lists()->updateMember('developers@example.com', 'user@example.com', [
     'address' => 'user@example.com',
     'name' => 'John Doe',
     'vars' => ['age' => 43, 'gender' => 'male'],
