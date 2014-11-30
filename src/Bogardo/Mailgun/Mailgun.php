@@ -162,6 +162,16 @@ class Mailgun extends MailgunApi
         return $this->lists = new Lists();
     }
 
+    /**
+     * OptInHandler
+     *
+     * @return \Mailgun\Lists\OptInHandler
+     */
+    public function optInHandler()
+    {
+        return $this->mailgun()->OptInHandler();
+    }
+
 	/**
 	 * Get HTML and/or Text message
      *

@@ -43,6 +43,7 @@ It's main advantage is that the syntax is the same as the Laravel Mail component
         - [Add members](#add-members)
         - [Update member](#update-member)
         - [Delete member](#delete-member)
+	- [OptInHandler](#optinhandler)
 	- [Email Validation](#email-validation)
 
 ## Installation ##
@@ -740,6 +741,59 @@ $list->deleteMember('user@example.com');
 ```
 
 Returns `true` if successfull.
+
+---
+
+## OptInHandler ##
+
+Utility for generating and validating an OptIn hash.
+
+The typical flow for using this utility would be as follows:
+
+> Registration
+
+1. Recipient Requests Subscribe
+2. Generate OptIn Link (with `OptInHandler`)
+3. Email Recipient OptIn Link
+
+> Validation
+
+1. Recipient Clicks OptIn Link
+2. Validate OptIn Link (with `OptInHandler`)
+3. Subscribe User
+
+###### Examples
+
+```php
+$secretKey   = 'a_very_secret_key';
+```
+
+> Registration
+
+```php
+$listaddress = 'mailinglist@example.com';
+$subscriber  = 'recipient@example.com';
+
+$hash = Mailgun::optInHandler()->generateHash($listaddress, $secretKey, $subscriber);
+
+var_dump($hash);
+// string 'eyJoIjoiODI2YWQ0OTRhNzkxMmZkYzI0MGJjYjM2MjFjMzAyY2M2YWQxZTY5MyIsInAiOiJleUp5SWpvaWNtVmphWEJwWlc1MFFHVjRZVzF3YkdVdVkyOXRJaXdpYkNJNkltMWhhV3hwYm1kc2FYTjBRR1Y0WVcxd2JHVXVZMjl0SW4wPSJ9' (length=180)
+```
+
+> Validation
+
+```php
+$result = Mailgun::optInHandler()->validateHash($secretKey, $hash);
+
+var_dump($result);
+// array (size=2)
+//   'recipientAddress' => string 'recipient@example.com' (length=21)
+//   'mailingList' => string 'mailinglist@example.com' (length=23)
+  
+Mailgun::lists()->addMember($result['mailingList'], [
+    'address' => $result['recipientAddress']
+]);
+```
 
 ---
 
