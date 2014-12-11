@@ -109,7 +109,7 @@ class Mailgun extends MailgunApi
 	 */
 	public function validate($address)
 	{
-		$data = $this->mailgun()->get("address/validate", ['address' => $address]);
+		$data = $this->mailgun(null, Config::get('mailgun::public_api_key'))->get("address/validate", ['address' => $address]);
 		return $data->http_response_body;
 	}
 
@@ -131,7 +131,7 @@ class Mailgun extends MailgunApi
 			$syntaxOnly = 'false';
 		}
 
-		$data = $this->mailgun()->get("address/parse", ['addresses' => $addresses, 'syntax_only' => $syntaxOnly]);
+		$data = $this->mailgun(null, Config::get('mailgun::public_api_key'))->get("address/parse", ['addresses' => $addresses, 'syntax_only' => $syntaxOnly]);
 		return $data->http_response_body;
 	}
 

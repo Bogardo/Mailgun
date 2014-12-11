@@ -9,13 +9,19 @@ abstract class MailgunApi {
 
     /**
      * @param bool $init
+     * @param string $apiKey
      *
      * @return MailgunCore
      */
-    public function mailgun($init = false)
+    public function mailgun($init = false, $apiKey = '')
     {
         if (!$this->mailgun || $init === true) {
-            $this->mailgun = new MailgunCore(Config::get('mailgun::api_key'));
+
+            if (!$apiKey) {
+                $apiKey = Config::get('mailgun::api_key');
+            }
+
+            $this->mailgun = new MailgunCore($apiKey);
         }
 
         return $this->mailgun;
