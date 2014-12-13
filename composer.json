@@ -2,7 +2,7 @@
     "name": "bogardo/mailgun",
     "description": "A laravel 4.1 wrapper for sending mail via the Mailgun API in Laravel 4 style",
     "type": "laravel-package",
-    "license": "GPL v2",
+    "license": "MIT",
     "keywords": [
         "mail",
         "mailgun",
