@@ -7,6 +7,7 @@ It's main advantage is that the syntax is the same as the Laravel Mail component
 > This package makes use of the [Mailgun-PHP](https://github.com/mailgun/mailgun-php) library.<br />
 
 <br />
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Bogardo/Mailgun?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Total Downloads](https://poser.pugx.org/bogardo/mailgun/downloads.png)](https://packagist.org/packages/bogardo/mailgun) [![Monthly Downloads](https://poser.pugx.org/bogardo/mailgun/d/monthly.png)](https://packagist.org/packages/bogardo/mailgun)
 
 ## Table of contents ##
