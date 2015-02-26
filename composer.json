@@ -25,5 +25,5 @@
             "Bogardo\\Mailgun\\": "src/Bogardo/Mailgun/"
         }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }
