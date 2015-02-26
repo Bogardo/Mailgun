@@ -1,4 +1,4 @@
-<?php  namespace Bogardo\Mailgun;
+<?php  namespace Bogardo\Mailgun\Mailgun;
 
 use Config;
 use Mailgun\Mailgun as MailgunCore;

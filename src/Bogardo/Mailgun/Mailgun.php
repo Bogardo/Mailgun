@@ -1,5 +1,7 @@
 <?php namespace Bogardo\Mailgun;
 
+use Bogardo\Mailgun\Mailgun\Lists;
+use Bogardo\Mailgun\Mailgun\MailgunApi;
 use Config;
 use Closure;
 use Illuminate\View\Factory;
@@ -39,7 +41,7 @@ class Mailgun extends MailgunApi
     /**
      * Mailgun lists Object
      *
-     * @var \Bogardo\Mailgun\Lists
+     * @var \Bogardo\Mailgun\Mailgun\Lists
      */
     protected $lists;
 
@@ -152,7 +154,7 @@ class Mailgun extends MailgunApi
     /**
      * Access mailinglists
      *
-     * @return Lists
+     * @return \Bogardo\Mailgun\Mailgun\Lists
      */
     public function lists()
     {

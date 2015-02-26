@@ -1,7 +1,7 @@
-<?php  namespace Bogardo\Mailgun\Lists;
+<?php  namespace Bogardo\Mailgun\Mailgun\Lists;
 
 
-use Bogardo\Mailgun\MailgunApi;
+use Bogardo\Mailgun\Mailgun\MailgunApi;
 use Carbon\Carbon;
 use Config;
 use Illuminate\Support\Collection;

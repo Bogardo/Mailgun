@@ -1,7 +1,7 @@
-<?php  namespace Bogardo\Mailgun\Lists;
+<?php  namespace Bogardo\Mailgun\Mailgun\Lists;
 
 
-use Bogardo\Mailgun\MailgunApi;
+use Bogardo\Mailgun\Mailgun\MailgunApi;
 
 class Member extends MailgunApi {
 

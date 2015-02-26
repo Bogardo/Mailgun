@@ -1,7 +1,7 @@
-<?php namespace Bogardo\Mailgun;
+<?php namespace Bogardo\Mailgun\Mailgun;
 
 
-use Bogardo\Mailgun\Lists\Mailinglist;
+use Bogardo\Mailgun\Mailgun\Lists\Mailinglist;
 use Illuminate\Support\Collection;
 
 class Lists extends MailgunApi {
