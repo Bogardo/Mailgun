@@ -98,7 +98,7 @@ class Mailgun extends MailgunApi
 
 		$this->getMessage($view, $data);
 
-		return $this->mailgun()->sendMessage(Config::get('mailgun::domain'), $this->getMessageData(), $this->getAttachmentData());
+		return $this->mailgun(true, Config::get('mailgun::api_key'))->sendMessage(Config::get('mailgun::domain'), $this->getMessageData(), $this->getAttachmentData());
 	}
 
 	/**
