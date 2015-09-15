@@ -19,7 +19,9 @@ class MailgunServiceProvider extends ServiceProvider
 	 */
 	public function boot()
 	{
-		$this->package('bogardo/mailgun');
+        $this->publishes([
+            __DIR__.'/../config/config.php' => config_path('mailgun.php'),
+        ]);
 	}
 
 	/**
@@ -37,6 +39,10 @@ class MailgunServiceProvider extends ServiceProvider
 			$loader = \Illuminate\Foundation\AliasLoader::getInstance();
 			$loader->alias('Mailgun', 'Bogardo\Mailgun\Facades\Mailgun');
 		});
+
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/config.php', 'mailgun'
+        );
 	}
 
 	/**
