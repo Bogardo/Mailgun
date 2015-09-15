@@ -1,13 +1,15 @@
-<?php  namespace Bogardo\Mailgun\Mailgun\Lists;
+<?php
 
+
+namespace Bogardo\Mailgun\Mailgun\Lists;
 
 use Bogardo\Mailgun\Mailgun\MailgunApi;
 use Carbon\Carbon;
 use Config;
 use Illuminate\Support\Collection;
 
-class Mailinglist extends MailgunApi {
-
+class Mailinglist extends MailgunApi
+{
     public $name;
 
     public $address;
@@ -23,7 +25,7 @@ class Mailinglist extends MailgunApi {
     /**
      * @param string $address
      */
-    public function __construct($address = "")
+    public function __construct($address = '')
     {
         if ($address) {
             $this->address = $address;
@@ -49,7 +51,7 @@ class Mailinglist extends MailgunApi {
     }
 
     /**
-     * Update this mailinglist
+     * Update this mailinglist.
      *
      * @param array $params
      *
@@ -58,22 +60,24 @@ class Mailinglist extends MailgunApi {
     public function update($params = [])
     {
         $this->setList($this->mailgun()->put("lists/{$this->address}", $params)->http_response_body->list);
+
         return $this;
     }
 
     /**
-     * Delete this mailinglist
+     * Delete this mailinglist.
      *
      * @return bool
      */
     public function delete()
     {
         $this->mailgun()->delete("lists/{$this->address}");
+
         return true;
     }
 
     /**
-     * Get all members
+     * Get all members.
      *
      * @param array $params
      *
@@ -97,7 +101,7 @@ class Mailinglist extends MailgunApi {
     }
 
     /**
-     * Get a single member
+     * Get a single member.
      *
      * @param $memberaddress
      *
@@ -114,7 +118,7 @@ class Mailinglist extends MailgunApi {
     }
 
     /**
-     * Add a new member to this mailinglist
+     * Add a new member to this mailinglist.
      *
      * @param array $params
      *
@@ -122,7 +126,7 @@ class Mailinglist extends MailgunApi {
      */
     public function addMember($params = [])
     {
-        if (isset($params['vars']) && (is_array($params['vars']) || is_object($params['vars'])) ) {
+        if (isset($params['vars']) && (is_array($params['vars']) || is_object($params['vars']))) {
             $params['vars'] = json_encode($params['vars']);
         }
 
@@ -135,15 +139,13 @@ class Mailinglist extends MailgunApi {
         );
 
         return $member;
-
     }
 
-
     /**
-     * Add multiple members to this mailinglist
+     * Add multiple members to this mailinglist.
      *
-     * @param array  $members
-     * @param bool   $upsert
+     * @param array $members
+     * @param bool  $upsert
      *
      * @return Mailinglist
      */
@@ -157,11 +159,11 @@ class Mailinglist extends MailgunApi {
             }
         }
 
-        $mailinglist = new Mailinglist();
+        $mailinglist = new self();
         $mailinglist->setList(
             $this->mailgun(true)->post("lists/{$this->address}/members.json", [
                 'members' => json_encode($members),
-                'upsert' => $upsert
+                'upsert'  => $upsert,
             ])->http_response_body->list
         );
 
@@ -169,7 +171,7 @@ class Mailinglist extends MailgunApi {
     }
 
     /**
-     * Update a member in this mailinglist
+     * Update a member in this mailinglist.
      *
      * @param $memberaddress
      * @param $params
@@ -178,7 +180,7 @@ class Mailinglist extends MailgunApi {
      */
     public function updateMember($memberaddress, $params)
     {
-        if (isset($params['vars']) && (is_array($params['vars']) || is_object($params['vars'])) ) {
+        if (isset($params['vars']) && (is_array($params['vars']) || is_object($params['vars']))) {
             $params['vars'] = json_encode($params['vars']);
         }
 
@@ -194,7 +196,7 @@ class Mailinglist extends MailgunApi {
     }
 
     /**
-     * Delete a member from this mailinglist
+     * Delete a member from this mailinglist.
      *
      * @param string $memberaddress
      *
@@ -203,6 +205,7 @@ class Mailinglist extends MailgunApi {
     public function deleteMember($memberaddress)
     {
         $this->mailgun()->delete("lists/{$this->address}/members/{$memberaddress}");
+
         return true;
     }
 
@@ -216,11 +219,12 @@ class Mailinglist extends MailgunApi {
         if (isset($member['vars']) && is_string($member['vars'])) {
             $member['vars'] = json_decode($member['vars']);
         }
+
         return $member;
     }
 
     /**
-     * Convert the created_at date to a Carbon instance when accessed
+     * Convert the created_at date to a Carbon instance when accessed.
      *
      * @param $name
      *
@@ -234,7 +238,7 @@ class Mailinglist extends MailgunApi {
     }
 
     /**
-     * Convert given date to a Carbon instance
+     * Convert given date to a Carbon instance.
      *
      * @param $date
      *
@@ -244,5 +248,4 @@ class Mailinglist extends MailgunApi {
     {
         return new Carbon($date, Config::get('app.timezone'));
     }
-
 }
