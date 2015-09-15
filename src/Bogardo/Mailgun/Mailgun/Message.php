@@ -375,8 +375,8 @@ class Message
 			$amount = $time;
 		}
 
-		$now = Carbon::now(Config::get('app.timezone', 'UTC'));
-		$deliveryTime = Carbon::now(Config::get('app.timezone', 'UTC'));
+		$now = Carbon::now(config('app.timezone', 'UTC'));
+		$deliveryTime = Carbon::now(config('app.timezone', 'UTC'));
 
 		switch ($type) {
 			case 'seconds':
@@ -425,7 +425,7 @@ class Message
 	 */
 	protected function setConfigReplyTo()
 	{
-		$replyTo = Config::get('mailgun::reply_to');
+		$replyTo = config('mailgun.reply_to');
 		if ($replyTo) {
 			$this->replyTo($replyTo);
 		}
@@ -436,7 +436,7 @@ class Message
 	 */
 	protected function setNativeSend()
 	{
-		if (Config::get('mailgun::force_from_address')) {
+		if (config('mailgun.force_from_address')) {
 			$this->{'o:native-send'} = 'yes';
 		}
 	}
@@ -446,7 +446,7 @@ class Message
 	 */
 	protected function setTestMode()
 	{
-		if (Config::get('mailgun::testmode')) {
+		if (config('mailgun.testmode')) {
 			$this->{'o:testmode'} = true;
 		}
 	}
@@ -462,7 +462,7 @@ class Message
 	 */
 	protected function checkCatchAll($email)
 	{
-		$catchAllMail = Config::get('mailgun::catch_all');
+		$catchAllMail = config('mailgun.catch_all');
 		if ($catchAllMail) {
 			$extractedEmail = $this->getEmailFromString($email);
 			return str_replace($extractedEmail, $catchAllMail, $email);

@@ -18,7 +18,7 @@ abstract class MailgunApi {
         if (!$this->mailgun || $init === true) {
 
             if (!$apiKey) {
-                $apiKey = Config::get('mailgun::api_key');
+                $apiKey = config('mailgun.api_key');
             }
 
             $this->mailgun = new MailgunCore($apiKey);
