@@ -1,14 +1,14 @@
-<?php namespace Bogardo\Mailgun\Mailgun;
+<?php
 
+namespace Bogardo\Mailgun\Mailgun;
 
 use Bogardo\Mailgun\Mailgun\Lists\Mailinglist;
 use Illuminate\Support\Collection;
 
-class Lists extends MailgunApi {
-
-
+class Lists extends MailgunApi
+{
     /**
-     * Get all mailinglists
+     * Get all mailinglists.
      *
      * @return Collection
      */
@@ -16,7 +16,7 @@ class Lists extends MailgunApi {
     {
         $items = new Collection([]);
 
-        $results = $this->mailgun()->get("lists", $params)->http_response_body;
+        $results = $this->mailgun()->get('lists', $params)->http_response_body;
         if ($results) {
             foreach ($results->items as $item) {
                 $mailinglist = new Mailinglist();
@@ -29,7 +29,7 @@ class Lists extends MailgunApi {
     }
 
     /**
-     * Get a single mailinglist by address
+     * Get a single mailinglist by address.
      *
      * @param string $listaddress
      *
@@ -41,6 +41,7 @@ class Lists extends MailgunApi {
         if ($result) {
             $mailinglist = new Mailinglist();
             $mailinglist->setList($result->list);
+
             return $mailinglist;
         }
     }
@@ -53,12 +54,13 @@ class Lists extends MailgunApi {
     public function create($params = [])
     {
         $mailinglist = new Mailinglist();
-        $mailinglist->setList($this->mailgun()->post("lists", $params)->http_response_body->list);
+        $mailinglist->setList($this->mailgun()->post('lists', $params)->http_response_body->list);
+
         return $mailinglist;
     }
 
     /**
-     * Update a mailinglist
+     * Update a mailinglist.
      *
      * @param string $listaddress
      * @param array  $params
@@ -68,11 +70,12 @@ class Lists extends MailgunApi {
     public function update($listaddress, $params = [])
     {
         $mailinglist = new Mailinglist($listaddress);
+
         return $mailinglist->update($params);
     }
 
     /**
-     * Delete a mailinglist
+     * Delete a mailinglist.
      *
      * @param string $listaddress
      *
@@ -81,11 +84,12 @@ class Lists extends MailgunApi {
     public function delete($listaddress)
     {
         $mailinglist = new Mailinglist($listaddress);
+
         return $mailinglist->delete();
     }
 
     /**
-     * Get mailinglist members
+     * Get mailinglist members.
      *
      * @param string $listaddress
      * @param array  $params
@@ -95,11 +99,12 @@ class Lists extends MailgunApi {
     public function members($listaddress, $params = [])
     {
         $mailinglist = new Mailinglist($listaddress);
+
         return $mailinglist->members($params);
     }
 
     /**
-     * Get a single mailinglist member
+     * Get a single mailinglist member.
      *
      * @param $listaddress
      * @param $memberaddress
@@ -109,11 +114,12 @@ class Lists extends MailgunApi {
     public function member($listaddress, $memberaddress)
     {
         $mailinglist = new Mailinglist($listaddress);
+
         return $mailinglist->member($memberaddress);
     }
 
     /**
-     * Add a member to a mailinglist
+     * Add a member to a mailinglist.
      *
      * @param string $listaddress
      * @param array  $params
@@ -128,7 +134,7 @@ class Lists extends MailgunApi {
     }
 
     /**
-     * Add multiple members tot a mailinglist
+     * Add multiple members tot a mailinglist.
      *
      * @param string $listaddress
      * @param array  $members
@@ -144,7 +150,7 @@ class Lists extends MailgunApi {
     }
 
     /**
-     * Update a member in a mailinglist
+     * Update a member in a mailinglist.
      *
      * @param       $listaddress
      * @param       $memberaddress
@@ -159,9 +165,8 @@ class Lists extends MailgunApi {
         return $mailinglist->updateMember($memberaddress, $params);
     }
 
-
     /**
-     * Delete a member of a mailinglist
+     * Delete a member of a mailinglist.
      *
      * @param string $listaddress
      * @param string $memberaddress
@@ -175,5 +180,4 @@ class Lists extends MailgunApi {
 
         return true;
     }
-
-} 
+}
