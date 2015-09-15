@@ -2,7 +2,6 @@
 
 use Bogardo\Mailgun\Mailgun\Lists;
 use Bogardo\Mailgun\Mailgun\MailgunApi;
-use Config;
 use Closure;
 use Illuminate\View\Factory;
 use Bogardo\Mailgun\Mailgun\Message;
