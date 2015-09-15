@@ -20,7 +20,7 @@ class MailgunServiceProvider extends ServiceProvider
 	public function boot()
 	{
         $this->publishes([
-            __DIR__.'/../config/config.php' => config_path('mailgun.php'),
+            __DIR__.'/../../config/config.php' => config_path('mailgun.php'),
         ]);
 	}
 
@@ -41,7 +41,7 @@ class MailgunServiceProvider extends ServiceProvider
 		});
 
         $this->mergeConfigFrom(
-            __DIR__.'/../config/config.php', 'mailgun'
+            __DIR__.'/../../config/config.php', 'mailgun'
         );
 	}
 
