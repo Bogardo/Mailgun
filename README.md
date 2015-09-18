@@ -1,7 +1,7 @@
 Bogardo/Mailgun
 =======
 
-A Mailgun package for Laravel 5 for sending emails using the Mailgun HTTP API.
+A Mailgun package for Laravel for sending emails using the Mailgun HTTP API.
 It's main advantage is that the syntax is the same as the Laravel Mail component and I also tried to give it very simmilar functionality. So if you've used that component before, using the Mailgun package should be a breeze.
 
 > This package makes use of the [Mailgun-PHP](https://github.com/mailgun/mailgun-php) library.<br />
@@ -9,8 +9,6 @@ It's main advantage is that the syntax is the same as the Laravel Mail component
 <br />
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Bogardo/Mailgun?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Total Downloads](https://poser.pugx.org/bogardo/mailgun/downloads.png)](https://packagist.org/packages/bogardo/mailgun) [![Monthly Downloads](https://poser.pugx.org/bogardo/mailgun/d/monthly.png)](https://packagist.org/packages/bogardo/mailgun)
-
-__For Laravel 4.x, check [master branch](https://github.com/Bogardo/Mailgun/tree/master)
 
 ## Table of contents ##
 - [Installation](#installation)
@@ -55,7 +53,17 @@ Open your `composer.json` file and add the following to the `require` key:
 
 ### Laravel 5.* ###
 
-	"bogardo/mailgun": "dev-laravel5"
+	"bogardo/mailgun": "4.0.*"
+
+### Laravel 4.2 ###
+
+	"bogardo/mailgun": "3.1.*"
+
+### Laravel 4.1/4.0 ###
+
+	"bogardo/mailgun": "2.*"
+
+---
 	
 After adding the key, run composer update from the command line to install the package 
 
