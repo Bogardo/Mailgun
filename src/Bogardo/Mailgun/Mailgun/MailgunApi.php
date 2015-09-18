@@ -1,14 +1,17 @@
-<?php  namespace Bogardo\Mailgun\Mailgun;
+<?php
+
+
+namespace Bogardo\Mailgun\Mailgun;
 
 use Config;
 use Mailgun\Mailgun as MailgunCore;
 
-abstract class MailgunApi {
-
+abstract class MailgunApi
+{
     protected $mailgun;
 
     /**
-     * @param bool $init
+     * @param bool   $init
      * @param string $apiKey
      *
      * @return MailgunCore
@@ -16,9 +19,8 @@ abstract class MailgunApi {
     public function mailgun($init = false, $apiKey = '')
     {
         if (!$this->mailgun || $init === true) {
-
             if (!$apiKey) {
-                $apiKey = Config::get('mailgun::api_key');
+                $apiKey = config('mailgun.api_key');
             }
 
             $this->mailgun = new MailgunCore($apiKey);
@@ -30,7 +32,7 @@ abstract class MailgunApi {
     protected function _parseParams($params)
     {
         if (empty($params)) {
-            return null;
+            return;
         }
 
         $array = [];
@@ -44,8 +46,7 @@ abstract class MailgunApi {
             }
             $array[$key] = $value;
         }
+
         return $array;
     }
-
-
-} 
+}

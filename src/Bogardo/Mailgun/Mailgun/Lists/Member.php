@@ -1,10 +1,12 @@
-<?php  namespace Bogardo\Mailgun\Mailgun\Lists;
+<?php
 
+
+namespace Bogardo\Mailgun\Mailgun\Lists;
 
 use Bogardo\Mailgun\Mailgun\MailgunApi;
 
-class Member extends MailgunApi {
-
+class Member extends MailgunApi
+{
     public $address;
 
     public $name;
@@ -13,8 +15,7 @@ class Member extends MailgunApi {
 
     public $vars;
 
-
-    public function __construct($address = "")
+    public function __construct($address = '')
     {
         if ($address) {
             $this->address;
@@ -23,13 +24,12 @@ class Member extends MailgunApi {
 
     public function setMember($member)
     {
-        $this->address    = $member->address;
-        $this->name       = $member->name;
+        $this->address = $member->address;
+        $this->name = $member->name;
         $this->subscribed = $member->subscribed;
-        $this->vars       = $member->vars;
+        $this->vars = $member->vars;
         unset($this->mailgun);
 
         return $this;
     }
-
 }

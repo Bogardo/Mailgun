@@ -1,6 +1,6 @@
 {
     "name": "bogardo/mailgun",
-    "description": "A laravel 4.1 wrapper for sending mail via the Mailgun API in Laravel 4 style",
+    "description": "A laravel 5 wrapper for sending mail via the Mailgun API in Laravel style",
     "type": "laravel-package",
     "license": "MIT",
     "keywords": [
@@ -15,10 +15,10 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0",
-        "illuminate/support": "4.*",
-        "mailgun/mailgun-php": "1.7.*",
-        "nesbot/carbon": "~1.0"
+        "php": ">=5.5.9",
+        "illuminate/support": "5.*",
+        "nesbot/carbon": "^1.20",
+        "mailgun/mailgun-php": "^1.8"
     },
     "autoload": {
         "psr-4": {

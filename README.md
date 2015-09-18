@@ -1,7 +1,7 @@
 Bogardo/Mailgun
 =======
 
-A Mailgun package for Laravel 4 for sending emails using the Mailgun HTTP API.
+A Mailgun package for Laravel 5 for sending emails using the Mailgun HTTP API.
 It's main advantage is that the syntax is the same as the Laravel Mail component and I also tried to give it very simmilar functionality. So if you've used that component before, using the Mailgun package should be a breeze.
 
 > This package makes use of the [Mailgun-PHP](https://github.com/mailgun/mailgun-php) library.<br />
@@ -9,6 +9,8 @@ It's main advantage is that the syntax is the same as the Laravel Mail component
 <br />
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Bogardo/Mailgun?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Total Downloads](https://poser.pugx.org/bogardo/mailgun/downloads.png)](https://packagist.org/packages/bogardo/mailgun) [![Monthly Downloads](https://poser.pugx.org/bogardo/mailgun/d/monthly.png)](https://packagist.org/packages/bogardo/mailgun)
+
+__For Laravel 4.x, check [master branch](https://github.com/Bogardo/Mailgun/tree/master)
 
 ## Table of contents ##
 - [Installation](#installation)
@@ -51,41 +53,44 @@ It's main advantage is that the syntax is the same as the Laravel Mail component
 
 Open your `composer.json` file and add the following to the `require` key:
 
-### Laravel 4.2 ###
+### Laravel 5.* ###
 
-	"bogardo/mailgun": "3.1.*"
-
-### Laravel 4.1/4.0 ###
-
-	"bogardo/mailgun": "2.*"
-
----
-
+	"bogardo/mailgun": "dev-laravel5"
+	
 After adding the key, run composer update from the command line to install the package 
 
 ```bash
 composer update
 ```
 
-Add the service provider to the `providers` array in your `app/config/app.php` file.
+Add the service provider to the `providers` array in your `config/app.php` file.
 
-    'Bogardo\Mailgun\MailgunServiceProvider'
+    Bogardo\Mailgun\MailgunServiceProvider::class,
 
 ## Configuration ##
 Before you can start using the package we need to set some configurations.
 To do so you must first publish the config file, you can do this with the following `artisan` command. 
 
 ```bash
-php artisan config:publish bogardo/mailgun
+php artisan vendor:publish --provider="Bogardo\Mailgun\MailgunServiceProvider" --tag="config"
 ```
-After the config file has been published you can find it at: `app/config/packages/bogardo/mailgun/config.php`
+After the config file has been published you can find it at: `config/mailgun.php`
 
 In it you must specify the `from` details, your Mailgun `api key` and the Mailgun `domain`.
+
+### Optional ###
+By default the Mailgun facade alias is added automatically, 
+but if you want that this be recognized by your IDE using [laravel-ide-helper](https://github.com/barryvdh/laravel-ide-helper).
+You have to add this to your aliases in config file `config/app.php`
+
+```php
+'Mailgun' => Bogardo\Mailgun\Facades\Mailgun::class
+```
 
 ## Usage ##
 
 ## Messages ##
-The Mailgun package offers most of the functionality as the Laravel 4 [Mail component](http://laravel.com/docs/mail).
+The Mailgun package offers most of the functionality as the Laravel 5 [Mail component](http://laravel.com/docs/mail).
 
 The `Mailgun::send` method may be used to send an e-mail message:
 
