@@ -1,29 +1,53 @@
 {
     "name": "bogardo/mailgun",
-    "description": "A laravel 5 wrapper for sending mail via the Mailgun API in Laravel style",
-    "type": "laravel-package",
-    "license": "MIT",
+    "description": "Laravel package for sending mail via the Mailgun API",
     "keywords": [
-        "mail",
         "mailgun",
-        "laravel"
+        "laravel",
+        "mail",
+        "email",
+        "bogardo"
     ],
+    "homepage": "https://github.com/Bogardo/Mailgun",
+    "license": "MIT",
     "authors": [
         {
-            "name": "Bogardo",
-            "email": "chrisbogaards@gmail.com"
+            "name": "Chris Bogaards",
+            "email": "chris@bogardo.com",
+            "homepage": "http://bogardo.com/"
         }
     ],
     "require": {
         "php": ">=5.5.9",
-        "illuminate/support": "5.*",
-        "nesbot/carbon": "^1.20",
-        "mailgun/mailgun-php": "^1.8"
+        "illuminate/support": "~5.1",
+        "mailgun/mailgun-php": "^2.1",
+        "nesbot/carbon": "^1.21",
+        "php-http/message": "^1.3"
+    },
+    "require-dev": {
+        "mockery/mockery": "^0.9.5",
+        "orchestra/testbench": "^3.3",
+        "php-http/mock-client": "^0.3.3",
+        "phpunit/phpunit": "~4.0||~5.0",
+        "squizlabs/php_codesniffer": "^2.3"
     },
     "autoload": {
         "psr-4": {
-            "Bogardo\\Mailgun\\": "src/Bogardo/Mailgun/"
+            "Bogardo\\Mailgun\\": "src"
         }
     },
-    "minimum-stability": "stable"
+    "autoload-dev": {
+        "files": [
+            "tests/MailgunTestCase.php"
+        ]
+    },
+    "scripts": {
+        "style:check": "phpcs -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src",
+        "style:fix": "phpcbf -p --standard=PSR2 --runtime-set ignore_errors_on_exit 1 --runtime-set ignore_warnings_on_exit 1 src"
+    },
+    "suggest": {
+        "barryvdh/laravel-ide-helper": "Add accurate autocompletion for Laravel Facades, including the Mailgun facade",
+        "php-http/guzzle6-adapter": "Use Guzzle 6 as your Mailgun HTTP client",
+        "php-http/guzzle5-adapter": "Use Guzzle 5 as your Mailgun HTTP client"
+    }
 }
