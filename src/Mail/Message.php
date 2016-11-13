@@ -3,7 +3,6 @@
 namespace Bogardo\Mailgun\Mail;
 
 use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Support\Collection;
 use Mailgun\Messages\MessageBuilder;
 
 class Message

@@ -5,9 +5,7 @@ namespace Bogardo\Mailgun;
 use Bogardo\Mailgun\Contracts\Mailgun as MailgunContract;
 use Bogardo\Mailgun\Mail\Mailer;
 use Closure;
-use Http\Client\HttpClient;
 use Illuminate\Contracts\Config\Repository as Config;
-use Illuminate\Contracts\View\View;
 use Illuminate\View\Factory;
 use Mailgun\Mailgun;
 

@@ -2,7 +2,6 @@
 
 namespace Bogardo\Mailgun\Validation;
 
-use Illuminate\Contracts\Config\Repository as Config;
 use Mailgun\Mailgun;
 
 class Validator
