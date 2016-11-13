@@ -7,7 +7,7 @@ return [
      *
      */
     'api' => [
-        'endpoint' => 'api.mailgun.com',
+        'endpoint' => 'api.mailgun.net',
         'version' => 'v3',
         'ssl' => true
     ],
