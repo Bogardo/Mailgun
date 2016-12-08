@@ -157,7 +157,7 @@ Mailgun::send(['text' => 'emails.textmail'], $data, $callback);
 If you do not want to use a template you can use the `raw()` method.
 
 ```php
-Mailgun::raw("This is the email body", $data, $callback);
+Mailgun::raw("This is the email body", $callback);
 ```
 
 ---
