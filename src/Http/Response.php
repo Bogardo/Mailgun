@@ -23,12 +23,19 @@ class Response
     public $message;
 
     /**
+     * The ID of the sent message, if it exists
+     * @var string
+     */
+    public $id;
+
+    /**
      * @param \stdClass $response
      */
     public function __construct(stdClass $response)
     {
         $this->status = $response->http_response_code;
         $this->message = $response->http_response_body->message;
+        $this->id = property_exists($response->http_response_body, 'id') ? $response->http_response_body->id : '';
         $this->data = null;
     }
 
