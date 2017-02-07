@@ -44,11 +44,11 @@ class MailgunServiceProvider extends ServiceProvider
         $this->app->bind('mailgun', function () use ($config) {
             $clientAdapter = $this->app->make('mailgun.client');
 
-            $mg = $this->app->make(MailgunApi::class, [
+            $mg = new MailgunApi(
                 $config->get('mailgun.api_key'),
                 $clientAdapter,
                 $config->get('mailgun.api.endpoint')
-            ]);
+            );
             $mg->setApiVersion($config->get('mailgun.api.version'));
             $mg->setSslEnabled($config->get('mailgun.api.ssl', true));
 
@@ -61,11 +61,11 @@ class MailgunServiceProvider extends ServiceProvider
         $this->app->bind('mailgun.public', function () use ($config) {
             $clientAdapter = $this->app->make('mailgun.client');
 
-            $mg = $this->app->make(MailgunApi::class, [
+            $mg = new MailgunApi(
                 $config->get('mailgun.public_api_key'),
                 $clientAdapter,
                 $config->get('mailgun.api.endpoint')
-            ]);
+            );
             $mg->setApiVersion($config->get('mailgun.api.version'));
             $mg->setSslEnabled($config->get('mailgun.api.ssl', true));
 
