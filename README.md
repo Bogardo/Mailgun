@@ -196,7 +196,7 @@ Which renders:
 
 ```html
 <body>
-    Hi John Doe,
+    Hi John Smith,
 	Please visit http://laravel.com
 </body>
 ```
