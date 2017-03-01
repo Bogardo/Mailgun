@@ -100,11 +100,9 @@ Add the following to your `AppServiceProvider` `register()` method.
 
 ```php
 $this->app->bind('mailgun.client', function() {
-	$client = new \GuzzleHttp\Client([
-		// your configuration
+	return new \Http\Adapter\Guzzle6\Client::createWithConfig([
+		// your Guzzle6 configuration
 	]);
-	
-	return new \Http\Adapter\Guzzle6\Client($client);
 });
 ```
 ---
