@@ -27,7 +27,7 @@ This packages fills that gap and supports most of the mail features offered by M
 Mailgun::send('emails.invoice', $data, function ($message) {
     $message
         ->subject('Your Invoice')
-        ->to('john.doe@example.com', 'John Doe');
+        ->to('john.doe@example.com', 'John Doe')
         ->bcc('sales@company.com')
         ->attach(storage_path('invoices/12345.pdf'))
         ->trackClicks(true)
