@@ -50,7 +50,7 @@ Install the package via composer
 composer require bogardo/mailgun
 ```
 
-Register the ServiceProvider and (optionally) the Facade
+If using Laravel 5.1 to 5.4, Register the ServiceProvider and (optionally) the Facade
 
 ```php
 // config/app.php
@@ -73,6 +73,12 @@ Next, publish the config file with the following `artisan` command.<br />
 
 ```bash
 php artisan vendor:publish --provider="Bogardo\Mailgun\MailgunServiceProvider" --tag="config"
+```
+
+or if using Laravel 5.5 <br />
+
+```bash
+php artisan vendor:publish
 ```
 
 After publishing, configure the package in `config/mailgun.php`.
