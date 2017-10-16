@@ -53,10 +53,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Bogardo\Mailgun\MailgunServiceProvider"
+                "Bogardo\\Mailgun\\MailgunServiceProvider"
             ],
             "aliases": {
-                "Mailgun": "Bogardo\Mailgun\Facades\Mailgun"
+                "Mailgun": "Bogardo\\Mailgun\\Facades\\Mailgun"
             }
         }
     }
