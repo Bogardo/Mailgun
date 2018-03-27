@@ -175,7 +175,7 @@ The `Mailgun::send()` method may be used to send an e-mail message:
 
 ```php
 Mailgun::send('emails.welcome', $data, function ($message) {
-    $message->to('foo@example.com', 'John Smith')->subject('Welcome!');
+    $message->to('foo@example.com', 'John Doe')->subject('Welcome!');
 });
 ```
 ---
@@ -230,12 +230,12 @@ Example:
 
 ```php	
 $data = [
-	'customer' => 'John Smith',
+	'customer' => 'John Doe',
 	'url' => 'http://laravel.com'
 ];
 
 Mailgun::send('emails.welcome', $data, function ($message) {
-	$message->to('foo@example.com', 'John Smith')->subject('Welcome!');
+	$message->to('foo@example.com', 'John Doe')->subject('Welcome!');
 });
 ```
 
@@ -446,7 +446,7 @@ To send an email in 60 seconds from now you can do the following:
 
 ```php
 Mailgun::later(60, 'emails.welcome', $data, function ($message) {
-    $message->to('foo@example.com', 'John Smith')->subject('Welcome!');
+    $message->to('foo@example.com', 'John Doe')->subject('Welcome!');
 });
 ```
 
@@ -455,7 +455,7 @@ For example, sending in 5 hours from now:
 
 ```php
 Mailgun::later(['hours' => 5], 'emails.welcome', $data, function($message) {
-    $message->to('foo@example.com', 'John Smith')->subject('Welcome!');
+    $message->to('foo@example.com', 'John Doe')->subject('Welcome!');
 });
 ```
 
