@@ -16,19 +16,19 @@ return [
      * Domain name registered with Mailgun
      *
      */
-    'domain' => '',
+    'domain' => env('MAILGUN_DOMAIN', ''),
 
     /*
      * Mailgun (private) API key
      *
      */
-    'api_key' => '',
+    'api_key' => env('MAILGUN_PRIVATE', ''),
 
     /*
      * Mailgun public API key
      *
      */
-    'public_api_key' => '',
+    'public_api_key' => env('MAILGUN_PUBLIC', ''),
 
     /*
      * You may wish for all e-mails sent with Mailgun to be sent from
@@ -37,15 +37,15 @@ return [
      *
      */
     'from' => [
-        'address' => '',
-        'name' => ''
+        'address' => env('MAILGUN_FROM_ADDRESS', ''),
+        'name' => env('MAILGUN_FROM_NAME', ''),
     ],
 
     /*
      * Global reply-to e-mail address
      *
      */
-    'reply_to' => '',
+    'reply_to' => env('MAILGUN_REPLY_TO', ''),
 
     /*
      * Force the from address
@@ -60,7 +60,7 @@ return [
      * because if enabled, Mailgun is not able to handle soft bounces
      *
      */
-    'force_from_address' => false,
+    'force_from_address' => env('MAILGUN_FORCE_FROM_ADRESS', false),
 
     /*
      * Testing
@@ -70,7 +70,7 @@ return [
      * Specify an email address that receives all emails send with Mailgun
      * This email address will overwrite all email addresses within messages
      */
-    'catch_all' => "",
+    'catch_all' => env('MAILGUN_CATCH_ALL', ''),
 
     /*
      * Testing
@@ -83,5 +83,5 @@ return [
      *
      * Note: Mailgun DOES charge your account for messages sent in test mode.
      */
-    'testmode' => false
+    'testmode' => env('MAILGUN_TESTMODE', false)
 ];
