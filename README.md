@@ -50,7 +50,7 @@ Install the package via composer
 composer require bogardo/mailgun
 ```
 
-Register the ServiceProvider and (optionally) the Facade
+If using Laravel 5.1 to 5.4, Register the ServiceProvider and (optionally) the Facade
 
 ```php
 // config/app.php
@@ -73,6 +73,12 @@ Next, publish the config file with the following `artisan` command.<br />
 
 ```bash
 php artisan vendor:publish --provider="Bogardo\Mailgun\MailgunServiceProvider" --tag="config"
+```
+
+or if using Laravel 5.5 <br />
+
+```bash
+php artisan vendor:publish
 ```
 
 After publishing, add and fill the next values to your [`.env` file](https://laravel.com/docs/configuration#environment-configuration)
@@ -126,11 +132,9 @@ MAILGUN_CATCH_ALL=
 #
 # Note: Mailgun DOES charge your account for messages sent in test mode.
 MAILGUN_TESTMODE=
-
 ```
 
 You can also configure the package in your `config/mailgun.php`.
-
 
 ### HTTP Client Dependency
 

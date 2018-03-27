@@ -49,5 +49,15 @@
         "barryvdh/laravel-ide-helper": "Add accurate autocompletion for Laravel Facades, including the Mailgun facade",
         "php-http/guzzle6-adapter": "Use Guzzle 6 as your Mailgun HTTP client",
         "php-http/guzzle5-adapter": "Use Guzzle 5 as your Mailgun HTTP client"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Bogardo\\Mailgun\\MailgunServiceProvider"
+            ],
+            "aliases": {
+                "Mailgun": "Bogardo\\Mailgun\\Facades\\Mailgun"
+            }
+        }
     }
 }
