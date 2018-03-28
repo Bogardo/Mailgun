@@ -33,13 +33,19 @@ class Validator
      * It is not intended to be used for bulk email list scrubbing and Mailgun reserves
      * the right to disable your account if Mailgun sees it being used as such.
      *
+     * @see https://documentation.mailgun.com/en/latest/api-email-validation.html
+     *
      * @param string $address
+     * @param bool   $mailboxVerification
      *
      * @return \stdClass
      */
-    public function validate($address)
+    public function validate($address, $mailboxVerification = false)
     {
-        return $this->mailgun->get('address/validate', ['address' => $address])->http_response_body;
+        return $this->mailgun->get('address/validate', [
+            'address' => $address,
+            'mailbox_verification' => $mailboxVerification
+        ])->http_response_body;
     }
 
     /**
