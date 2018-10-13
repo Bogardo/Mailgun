@@ -34,7 +34,7 @@ class Response
     public function __construct(stdClass $response)
     {
         $this->status = $response->http_response_code;
-        $this->message = $response->http_response_body->message;
+        $this->message = property_exists($response->http_response_body, 'message') ? $response->http_response_body->message : '';
         $this->id = property_exists($response->http_response_body, 'id') ? $response->http_response_body->id : '';
         $this->data = null;
     }
