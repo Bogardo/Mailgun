@@ -173,8 +173,27 @@ class Mailer
      */
     protected function setRawBody($view)
     {
-        $this->message->builder()->setHtmlBody($view);
-        $this->message->builder()->setTextBody(strip_tags($view, '<a>'));
+        // If raw body is a string, set HTML and use strip_tags to generate text content
+        if (is_string($view)) {
+            $this->message->builder()->setHtmlBody($view);
+            $this->message->builder()->setTextBody(strip_tags($view, '<a>'));
+        } elseif (is_array($view) && isset($view[0])) {
+            // Get HTML from first element of view array
+            $this->message->builder()->setHtmlBody($view[0]);
+            if (isset($view[1])) {
+                // Get text content if present in second element
+                $this->message->builder()->setTextBody($view[1]);
+            }
+        } elseif (is_array($view)) {
+            // Set HTML content from view array
+            if (isset($view['html'])) {
+                $this->message->builder()->setHtmlBody($view['html']);
+            }
+            // Set text content from view array
+            if (isset($view['text'])) {
+                $this->message->builder()->setTextBody($view['text']);
+            }
+        }
     }
 
     /**
